@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Check-In | Latest Orders</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    .customer-section { margin-bottom: 2.5rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem 1rem; text-align: left; }
+    th { background: #f0f0f0; }
+    .ai-suggestion { margin-top: 1rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd; }
+    .error { color: red; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Check-In — Latest Orders</h1>
+  <div id="customers"></div>
+
+  <script>
+    var USER_IDS = [1, 2];
+
+    function buildSection(userId, data, err) {
+      var section = document.createElement("div");
+      section.className = "customer-section";
+      section.id = "customer-" + userId;
+
+      var heading = document.createElement("h2");
+      heading.textContent = "User " + userId;
+      section.appendChild(heading);
+
+      if (err) {
+        var errDiv = document.createElement("div");
+        errDiv.className = "error";
+        errDiv.textContent = "Failed to load: " + err;
+        section.appendChild(errDiv);
+        return section;
+      }
+
+      // Table
+      var table = document.createElement("table");
+      table.innerHTML =
+        "<thead><tr>" +
+          "<th>Product Name</th>" +
+          "<th>Category</th>" +
+          "<th>Description</th>" +
+          "<th>Price</th>" +
+          "<th>Stars</th>" +
+        "</tr></thead>" +
+        "<tbody><tr>" +
+          "<td>" + (data.product_name  ?? "") + "</td>" +
+          "<td>" + (data.category_name ?? "") + "</td>" +
+          "<td>" + (data.short_desc    ?? "") + "</td>" +
+          "<td>" + (data.price         ?? "") + "</td>" +
+          "<td>" + (data.stars         ?? "") + "</td>" +
+        "</tr></tbody>";
+      section.appendChild(table);
+
+      // AI suggestion
+      if (data.ai_suggestion) {
+        var box = document.createElement("div");
+        box.className = "ai-suggestion";
+        box.innerHTML = "<strong>AI Suggestion:</strong><p>" + data.ai_suggestion + "</p>";
+        section.appendChild(box);
+      }
+
+      return section;
+    }
+
+    var requests = USER_IDS.map(function(userId) {
+      return fetch("http://127.0.0.1:8000/check_in/" + userId)
+        .then(function(res) {
+          if (!res.ok) throw new Error("API returned " + res.status);
+          return res.json();
+        })
+        .then(function(data) { return { userId: userId, data: data, err: null }; })
+        .catch(function(e)   { return { userId: userId, data: null, err: e.message }; });
+    });
+
+    Promise.all(requests).then(function(results) {
+      var container = document.getElementById("customers");
+      results.forEach(function(r) {
+        container.appendChild(buildSection(r.userId, r.data, r.err));
+      });
+    });
+  </script>
+</body>
+</html>
