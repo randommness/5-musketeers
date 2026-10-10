@@ -1,8 +1,3 @@
-# Activation of local API:
-# 1) Activate your virtual environment (.venv) 
-# 2) Run uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-# 3) Once it's up, you can access the Swagger UI at http://127.0.0.1:8000/docs
-
 import logging
 import sys
 

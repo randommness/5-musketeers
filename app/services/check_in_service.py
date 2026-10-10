@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 # Caching
 _cache: dict = {}
-CACHE_TTL_SECONDS = 1800
+CACHE_TTL_SECONDS = 3600
 
 
 def get_latest_order(db: Session):

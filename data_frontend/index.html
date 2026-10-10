@@ -5,11 +5,8 @@
   <title>Check-In | Latest Orders</title>
   <style>
     body { font-family: sans-serif; margin: 2rem; }
-    .customer-section { margin-bottom: 2.5rem; }
-    table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem 1rem; text-align: left; }
-    th { background: #f0f0f0; }
-    .ai-suggestion { margin-top: 1rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd; }
+    .customer-section { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e0e0e0; }
+    .customer-chunk { line-height: 1.7; }
     .error { color: red; margin-top: 0.5rem; }
   </style>
 </head>
@@ -19,44 +16,31 @@
   <div id="customers"></div>
 
   <script>
-    var API_BASE_URL = "https://5-musketeers-production.up.railway.app";
+    var API_BASE_URL = "http://127.0.0.1:8000";
 
     function buildSection(user) {
       var section = document.createElement("div");
       section.className = "customer-section";
       section.id = "customer-" + user.user_id;
 
-      var heading = document.createElement("h2");
-      heading.textContent = "User " + user.user_id;
-      section.appendChild(heading);
+      // Paragraph 1 — purchase info
+      var purchaseInfo = "User " + user.user_id + ". Purchase info:"
+        + " product_name=" + (user.product_name  ?? "")
+        + ", category="    + (user.category_name ?? "")
+        + ", description="  + (user.short_desc    ?? "")
+        + ", price="        + (user.price         ?? "")
+        + ", stars="        + (user.stars         ?? "");
 
-      // Table
-      var table = document.createElement("table");
-      table.innerHTML =
-        "<thead><tr>" +
-          "<th>Product Name</th>" +
-          "<th>Category</th>" +
-          "<th>Description</th>" +
-          "<th>Price</th>" +
-          "<th>Stars</th>" +
-        "</tr></thead>" +
-        "<tbody><tr>" +
-          "<td>" + (user.product_name  ?? "") + "</td>" +
-          "<td>" + (user.category_name ?? "") + "</td>" +
-          "<td>" + (user.short_desc    ?? "") + "</td>" +
-          "<td>" + (user.price         ?? "") + "</td>" +
-          "<td>" + (user.stars         ?? "") + "</td>" +
-        "</tr></tbody>";
-      section.appendChild(table);
+      var p1 = document.createElement("p");
+      p1.className = "customer-chunk";
+      p1.textContent = purchaseInfo;
+      section.appendChild(p1);
 
-      // AI suggestion
-      if (user.ai_suggestion) {
-        var box = document.createElement("div");
-        box.className = "ai-suggestion";
-        box.innerHTML = "<strong>AI Suggestion:</strong><p>" + user.ai_suggestion + "</p>";
-        section.appendChild(box);
-      }
-
+      // Paragraph 2 — AI suggestion
+      var p2 = document.createElement("p");
+      p2.className = "customer-chunk";
+      p2.textContent = "AI suggestion: " + (user.ai_suggestion ?? "");
+      section.appendChild(p2);
       return section;
     }
 
