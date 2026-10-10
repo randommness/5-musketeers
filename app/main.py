@@ -4,8 +4,13 @@
 # 3) Once it's up, you can access the Swagger UI at http://127.0.0.1:8000/docs
 
 import logging
-import truststore
-truststore.inject_into_ssl()
+import sys
+
+# truststore uses the Windows OS certificate store — only needed for local dev on Windows.
+# On Linux (Railway), certifi below handles SSL instead, so truststore is skipped.
+if sys.platform == "win32":
+    import truststore
+    truststore.inject_into_ssl()
 
 from app.api import create_app
 import uvicorn

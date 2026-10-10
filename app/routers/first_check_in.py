@@ -7,6 +7,6 @@ router = APIRouter(prefix="/check_in", tags=["First Use Check In"])
 
 # GET /first_check_in/{user_id}
 
-@router.get("/{user_id}")
-def get_latest_order(user_id: int, db: Session = Depends(get_db)):
-    return check_in_service.get_latest_order(db, user_id)
+@router.get("/all")
+def get_latest_order(db: Session = Depends(get_db)):
+    return check_in_service.get_latest_order(db)
