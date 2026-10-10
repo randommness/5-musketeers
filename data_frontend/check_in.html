@@ -19,6 +19,8 @@
   <div id="customers"></div>
 
   <script>
+    var API_BASE_URL = "https://5-musketeers-production.up.railway.app/";
+
     function buildSection(user) {
       var section = document.createElement("div");
       section.className = "customer-section";
@@ -58,7 +60,7 @@
       return section;
     }
 
-    fetch("http://127.0.0.1:8000/check_in/all")
+    fetch(API_BASE_URL + "/check_in/all")
       .then(function(res) {
         if (!res.ok) throw new Error("API returned " + res.status);
         return res.json();
