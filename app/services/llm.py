@@ -2,7 +2,7 @@ import os
 import requests
 
 LLM_URL = os.getenv("LLM_API_BASE_URL")
-LLM_MODEL = "deepseek-v4.1-flash"
+LLM_MODEL = "gpt-oss-120b-fast"
 
 DEFAULT_SYSTEM_PROMPT = (
     "You are an expert assistant for a pet care business that sells products, "

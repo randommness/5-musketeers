@@ -16,32 +16,41 @@ CACHE_TTL_SECONDS = 3600
 
 def get_latest_order(db: Session):
     # For all users, get the latest delivered order, storing them as dictionaries.
+    # WARNING: This query only returns first 5 customers (I'm controlling unnecessary LLM calls for now, remove later).
     result: Any = db.execute(
         text("""
-        WITH latest_purchase AS (
+        WITH latest_orders AS (
             SELECT
-                ps.user_id,
-                ps.product_id,
-                ps.order_time,
+                o.customer_id,
+                o.order_id,
                 ROW_NUMBER() OVER (
-                    PARTITION BY ps.user_id
-                    ORDER BY ps.order_time DESC
+                    PARTITION BY o.customer_id
+                    ORDER BY o.order_date DESC, o.order_id DESC
                 ) AS rn
-            FROM public.purchases ps
-            WHERE ps.delivery_status = 'Delivered'
+            FROM orders o
         )
         SELECT
-            lp.user_id,
-            pdt.product_name,
-            pdt.category_name,
-            pdt.short_desc,
-            pdt.price,
-            pdt.stars
-        FROM latest_purchase lp
-        INNER JOIN public.products pdt
-            ON lp.product_id = pdt.product_id
-        WHERE lp.rn = 1
-        ORDER BY lp.user_id;
+            o.customer_id,
+            oi.product_id,
+            p.product_name,
+            p.product_category,
+            p.pet_type,
+            p.brand,
+            p.product_description,
+            CONCAT(p.product_weight, ' ', p.weight_unit) AS product_weight,
+            p.packaging_type,
+            p.product_size,
+            p.product_rating,
+            p.number_of_reviews
+        FROM latest_orders lo
+        INNER JOIN orders o
+            ON o.order_id = lo.order_id
+        INNER JOIN order_item oi
+            ON o.order_id = oi.order_id
+        INNER JOIN product_info p
+            ON oi.product_id = p.product_id
+        WHERE lo.rn = 1 
+        AND lo.customer_id IN ('CUST0001', 'CUST0002', 'CUST0003', 'CUST0004', 'CUST0005')
         """)
     ).fetchall()
 
@@ -50,23 +59,23 @@ def get_latest_order(db: Session):
 
     # For each user, check if we can use cache. If either cache expired, or user order is new, then call LLM for AI suggestion.
     output = []
-    system_prompt = """You are a helpful, check-in agent working for a pet care business that offers pet care products, treatments, and services.
-                Users may encounter difficulty using their product or understanding their pet treatment / service when they recieve it or place an order for it.
+    system_prompt = """You are a helpful, check-in agent working for a pet care business that offers pet care products.
+                Users may encounter difficulty using their product when they recieve it or place an order for it.
                 Based on the data provided by the user, your objective is to analyse this data and generate a short summary of around 1 paragraph, summarising
-                how to use the product, tips and tricks, and anything you think can help the user. You must be concise, and go straight to the point. Don't return markdown,
-                return plain text. Do not ask for follow up, do not just describe the product, but share insights and how can the pet use this product / how will the treatment
-                or service help the pet meaningfully."""
+                how to use the product, tips and tricks, what users have said in general, and anything you think can help the user. You must be concise, and go straight to the point. 
+                Don't return markdown, return plain text. Do not ask for follow up, do not just describe the product, but share insights and how can the pet use this product
+                meaningfully & how the owner can help."""
     
     for row in rows:
-        user_id = row["user_id"]
+        customer_id = row["customer_id"]
 
-        cached = _cache.get(user_id)
+        cached = _cache.get(customer_id)
         if cached and (time.time() - cached["cached_at"]) < CACHE_TTL_SECONDS:
-            logger.debug("Cache hit for user %s", user_id)
+            logger.debug("Cache hit for user %s", customer_id)
             output.append(cached["result"])
             continue
 
-        logger.debug("Cache miss for user %s — calling LLM", user_id)
+        logger.debug("Cache miss for user %s — calling LLM", customer_id)
         ai_suggestion = chat(
             user_prompt=f"User data: {json.dumps(row)}",
             system_prompt=system_prompt
@@ -74,9 +83,9 @@ def get_latest_order(db: Session):
 
         # Now build the final entry (JSON payload) and append it to the output and cache
         entry = {**row, "ai_suggestion": ai_suggestion}
-        _cache[user_id] = {"result": entry, "cached_at": time.time()}
+        _cache[customer_id] = {"result": entry, "cached_at": time.time()}
         output.append(entry)
 
     # Return list of all users. The structure would be like:
-    # [{"user_id": 1, "product_name": ..., "ai_suggestion": ...}, {...}, ...]
+    # [{"customer_id": 1, "product_name": ..., "ai_suggestion": ...}, {...}, ...]
     return output

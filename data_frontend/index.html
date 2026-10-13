@@ -12,6 +12,7 @@
 </head>
 <body>
   <h1>Check-In — Latest Orders</h1>
+  <h2>Note: Controlled demo - Only first 5 customers returned</h2>
   <div id="loading">Loading, please wait...</div>
   <div id="customers"></div>
 
@@ -21,15 +22,20 @@
     function buildSection(user) {
       var section = document.createElement("div");
       section.className = "customer-section";
-      section.id = "customer-" + user.user_id;
+      section.id = "customer-" + user.customer_id;
 
       // Paragraph 1 — purchase info
-      var purchaseInfo = "User " + user.user_id + ". Purchase info:"
-        + " product_name=" + (user.product_name  ?? "")
-        + ", category="    + (user.category_name ?? "")
-        + ", description="  + (user.short_desc    ?? "")
-        + ", price="        + (user.price         ?? "")
-        + ", stars="        + (user.stars         ?? "");
+      var purchaseInfo = "Customer " + user.customer_id + ". Purchase info:"
+        + " product_name="        + (user.product_name        ?? "")
+        + ", category="           + (user.product_category    ?? "")
+        + ", pet_type="           + (user.pet_type            ?? "")
+        + ", brand="              + (user.brand               ?? "")
+        + ", description="        + (user.product_description ?? "")
+        + ", weight="             + (user.product_weight      ?? "")
+        + ", size="               + (user.product_size        ?? "")
+        + ", packaging="          + (user.packaging_type      ?? "")
+        + ", rating="             + (user.product_rating      ?? "")
+        + ", number_of_reviews="  + (user.number_of_reviews   ?? "");
 
       var p1 = document.createElement("p");
       p1.className = "customer-chunk";
