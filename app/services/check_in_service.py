@@ -50,7 +50,7 @@ def get_latest_order(db: Session):
         INNER JOIN product_info p
             ON oi.product_id = p.product_id
         WHERE lo.rn = 1 
-        AND lo.customer_id IN ('CUST0001', 'CUST0002', 'CUST0003', 'CUST0004', 'CUST0005')
+        AND lo.customer_id IN ('CUST001', 'CUST002', 'CUST003', 'CUST004', 'CUST005')
         """)
     ).fetchall()
 
