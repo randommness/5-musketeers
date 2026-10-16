@@ -51,6 +51,7 @@ def get_latest_order(db: Session):
             ON oi.product_id = p.product_id
         WHERE lo.rn = 1 
         AND lo.customer_id IN ('CUST001', 'CUST002', 'CUST003', 'CUST004', 'CUST005')
+        ORDER BY lo.customer_id ASC
         """)
     ).fetchall()
 

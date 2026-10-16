@@ -11,7 +11,7 @@ python -m venv .venv
 
 Ensure you activate the virtual environment each time you open a new terminal.
 ```bash
-.\venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 Ensure to install all packages in `requirements.txt`, by running the following
