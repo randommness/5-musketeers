@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -58,35 +59,57 @@ def get_latest_order(db: Session):
     rows = [dict(row._mapping) for row in result]
     logger.debug("SQL returned %d users", len(rows))
 
-    # For each user, check if we can use cache. If either cache expired, or user order is new, then call LLM for AI suggestion.
-    output = []
     system_prompt = """You are a helpful, check-in agent working for a pet care business that offers pet care products.
                 Users may encounter difficulty using their product when they recieve it or place an order for it.
                 Based on the data provided by the user, your objective is to analyse this data and generate a short summary of around 1 paragraph, summarising
-                how to use the product, tips and tricks, what users have said in general, and anything you think can help the user. You must be concise, and go straight to the point. 
+                how to use the product, tips and tricks, what users have said in general, and anything you think can help the user. You must be concise, and go straight to the point.
                 Don't return markdown, return plain text. Do not ask for follow up, do not just describe the product, but share insights and how can the pet use this product
                 meaningfully & how the owner can help."""
-    
+
+    # Separate cache hits from misses — no need to call LLM for cached users
+    cached_results: dict[str, dict] = {}
+    rows_to_process: list[dict] = []
+
     for row in rows:
         customer_id = row["customer_id"]
-
         cached = _cache.get(customer_id)
         if cached and (time.time() - cached["cached_at"]) < CACHE_TTL_SECONDS:
             logger.debug("Cache hit for user %s", customer_id)
-            output.append(cached["result"])
-            continue
+            cached_results[customer_id] = cached["result"]
+        else:
+            logger.debug("Cache miss for user %s — queued for LLM", customer_id)
+            rows_to_process.append(row)
 
-        logger.debug("Cache miss for user %s — calling LLM", customer_id)
+    # Fire all cache-miss LLM calls in parallel
+    def call_llm(row: dict) -> dict:
+        customer_id = row["customer_id"]
         ai_suggestion = chat(
             user_prompt=f"User data: {json.dumps(row)}",
             system_prompt=system_prompt
         )
-
-        # Now build the final entry (JSON payload) and append it to the output and cache
         entry = {**row, "ai_suggestion": ai_suggestion}
         _cache[customer_id] = {"result": entry, "cached_at": time.time()}
-        output.append(entry)
+        logger.debug("LLM call complete and cached for user %s", customer_id)
+        return entry
 
-    # Return list of all users. The structure would be like:
-    # [{"customer_id": 1, "product_name": ..., "ai_suggestion": ...}, {...}, ...]
+    llm_results: dict[str, dict] = {}
+    if rows_to_process:
+        logger.debug("Firing %d LLM calls in parallel", len(rows_to_process))
+        with ThreadPoolExecutor(max_workers=len(rows_to_process)) as executor:
+            futures = {executor.submit(call_llm, row): row["customer_id"] for row in rows_to_process}
+            for future in as_completed(futures):
+                entry = future.result()
+                llm_results[entry["customer_id"]] = entry
+
+    # Reassemble output in original row order
+    output = []
+    for row in rows:
+        customer_id = row["customer_id"]
+        if customer_id in cached_results:
+            output.append(cached_results[customer_id])
+        elif customer_id in llm_results:
+            output.append(llm_results[customer_id])
+
+    # Return list of all users. Shape:
+    # [{"customer_id": "CUST001", "product_name": ..., "ai_suggestion": ...}, ...]
     return output

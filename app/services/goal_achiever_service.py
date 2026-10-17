@@ -1,6 +1,7 @@
 import json
 import logging
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 from sqlalchemy.orm import Session
 from sqlalchemy import text
@@ -105,31 +106,50 @@ def goal_product_recommendation(db: Session):
     logger.debug("Grouped into %d customers", len(grouped))
 
 
-    # For each customer, check cache. If miss, pass their product rows (as a bundle) to the LLM.
-    output = []
-    for customer_id, product_rows in grouped.items():
+    # Separate cache hits from misses
+    cached_results: dict[str, dict] = {}
+    groups_to_process: list[tuple[str, list[dict]]] = []
 
+    for customer_id, product_rows in grouped.items():
         cached = _cache.get(customer_id)
         if cached and (time.time() - cached["cached_at"]) < CACHE_TTL_SECONDS:
             logger.debug("Cache hit for customer %s", customer_id)
-            output.append(cached["result"])
-            continue
+            cached_results[customer_id] = cached["result"]
+        else:
+            logger.debug("Cache miss for customer %s — queued for LLM with %d product(s)", customer_id, len(product_rows))
+            groups_to_process.append((customer_id, product_rows))
 
-        logger.debug("Cache miss for customer %s — calling LLM with %d product(s)", customer_id, len(product_rows))
+    # Fire all cache-miss LLM calls in parallel
+    def call_llm(customer_id: str, product_rows: list[dict]) -> dict:
         ai_suggestion = chat(
             user_prompt=f"Customer ID: {customer_id}. Recommended products: {json.dumps(product_rows)}",
             system_prompt=system_prompt
         )
-
-        # Build the final entry: customer_id + all their product rows + the AI suggestion
         entry = {
             "customer_id": customer_id,
             "recommended_products": product_rows,
             "ai_suggestion": ai_suggestion
         }
         _cache[customer_id] = {"result": entry, "cached_at": time.time()}
-        logger.debug("Cached result for customer %s", customer_id)
-        output.append(entry)
+        logger.debug("LLM call complete and cached for customer %s", customer_id)
+        return entry
+
+    llm_results: dict[str, dict] = {}
+    if groups_to_process:
+        logger.debug("Firing %d LLM calls in parallel", len(groups_to_process))
+        with ThreadPoolExecutor(max_workers=len(groups_to_process)) as executor:
+            futures = {executor.submit(call_llm, cid, prows): cid for cid, prows in groups_to_process}
+            for future in as_completed(futures):
+                entry = future.result()
+                llm_results[entry["customer_id"]] = entry
+
+    # Reassemble output in original grouped order
+    output = []
+    for customer_id in grouped:
+        if customer_id in cached_results:
+            output.append(cached_results[customer_id])
+        elif customer_id in llm_results:
+            output.append(llm_results[customer_id])
 
     # Return list of all customers. Shape:
     # [{"customer_id": "CUST001", "recommended_products": [{...}, {...}], "ai_suggestion": "..."}, ...]
