@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Products | Catalogue</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    .product-section { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e0e0e0; }
+    .product-chunk { line-height: 1.7; }
+    .error { color: red; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Product Catalogue</h1>
+  <div id="loading">Loading, please wait...</div>
+  <div id="products"></div>
+
+  <script>
+    var API_BASE_URL = "https://5-musketeers-production.up.railway.app";
+
+    function buildSection(product) {
+      var section = document.createElement("div");
+      section.className = "product-section";
+      section.id = "product-" + (product.product_id ?? "");
+
+      var p = document.createElement("p");
+      p.className = "product-chunk";
+      p.textContent = "Product ID: "             + (product.product_id               ?? "")
+        + ". product_name="                       + (product.product_name             ?? "")
+        + ", category="                           + (product.product_category         ?? "")
+        + ", pet_type="                           + (product.pet_type                 ?? "")
+        + ", brand="                              + (product.brand                    ?? "")
+        + ", description="                        + (product.product_description      ?? "")
+        + ", price_per_unit="                     + (product.price_per_unit           ?? "")
+        + ", weight_per_unit="                    + (product.weight_per_unit          ?? "")
+        + ", packaging_type="                     + (product.packaging_type           ?? "")
+        + ", size="                               + (product.product_size             ?? "")
+        + ", rating="                             + (product.product_rating           ?? "")
+        + ", number_of_reviews="                  + (product.number_of_reviews        ?? "")
+        + ", expiry_date="                        + (product.product_expiry_date      ?? "")
+        + ", subscription_availability="          + (product.subscription_availability ?? "");
+
+      section.appendChild(p);
+      return section;
+    }
+
+    fetch(API_BASE_URL + "/products/all")
+      .then(function(res) {
+        if (!res.ok) throw new Error("API returned " + res.status);
+        return res.json();
+      })
+      .then(function(products) {
+        document.getElementById("loading").style.display = "none";
+        var container = document.getElementById("products");
+        products.forEach(function(product) {
+          container.appendChild(buildSection(product));
+        });
+      })
+      .catch(function(err) {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("products").innerHTML =
+          "<p style='color:red'>Failed to load: " + err.message + "</p>";
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+import os
+import requests
+
+LLM_URL = os.getenv("LLM_API_BASE_URL")
+LLM_MODEL = "gpt-oss-120b-fast"
+
+DEFAULT_SYSTEM_PROMPT = (
+    "You are an expert assistant for a pet care business that sells products, "
+    "services, and treatments. You help analyse customer data and provide "
+    "concise, helpful insights. Always respond in plain text, no markdown."
+)
+
+def chat(user_prompt: str, system_prompt: str = DEFAULT_SYSTEM_PROMPT) -> str:
+    api_key = os.getenv("LLM_API_KEY")
+
+    response = requests.post(
+        LLM_URL,
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "model": LLM_MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        },
+        timeout=30,
+    )
+    response.raise_for_status()
+    return response.json()["choices"][0]["message"]["content"]

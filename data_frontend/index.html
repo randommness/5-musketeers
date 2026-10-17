@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YM Fanclub ❤️ Customer Data Website</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; max-width: 600px; }
+    h1 { margin-bottom: 0.25rem; }
+
+    /* Health status block */
+    #health-box {
+      margin: 1rem 0 2rem;
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: #f7f8fa;
+    }
+    #health-box h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: #57606a; }
+    .health-row { display: flex; gap: 0.5rem; align-items: center; margin: 0.25rem 0; font-size: 0.9rem; }
+    .badge { padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: bold; font-size: 0.8rem; }
+    .badge-ok       { background: #d1fae5; color: #065f46; }
+    .badge-degraded { background: #fee2e2; color: #991b1b; }
+    .badge-loading  { background: #e5e7eb; color: #6b7280; }
+
+    /* Landing page links */
+    nav { display: flex; flex-direction: column; gap: 0.75rem; }
+    nav a {
+      display: block;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #1f2328;
+      background: #ffffff;
+    }
+    nav a:hover { background: #f0f4ff; border-color: #3b82d4; }
+    nav a .link-title { font-weight: bold; }
+    nav a .link-desc  { font-size: 0.85rem; color: #57606a; margin-top: 0.15rem; }
+  </style>
+</head>
+<body>
+  <h1>YM Fanclub ❤️ Customer Data Website</h1>
+  <p style="color:#57606a; margin-top:0.25rem;">Internal developer portal</p>
+
+  <!-- Health status -->
+  <div id="health-box">
+    <h3>API Health</h3>
+    <div class="health-row">Status: <span class="badge badge-loading" id="h-status">checking…</span></div>
+    <div class="health-row">API: <span class="badge badge-loading" id="h-api">—</span></div>
+    <div class="health-row">Database: <span class="badge badge-loading" id="h-db">—</span></div>
+  </div>
+
+  <!-- Landing page links -->
+  <nav>
+    <a href="check_in" target="_blank">
+      <div class="link-title">Check-In — Latest Orders</div>
+      <div class="link-desc">Latest delivered order per customer + AI usage suggestion</div>
+    </a>
+    <a href="goal_achiever" target="_blank">
+      <div class="link-title">Goal Achiever — Product Recommendations</div>
+      <div class="link-desc">Products matching each customer's brand and category preferences</div>
+    </a>
+    <a href="products" target="_blank">
+      <div class="link-title">Products — Full Catalogue</div>
+      <div class="link-desc">Complete list of all products in the catalogue</div>
+    </a>
+    <a href="product_pair" target="_blank">
+      <div class="link-title">Product Pairing — Smart Recommendations</div>
+      <div class="link-desc">Association-rule and similarity-based product pair recommendations</div>
+    </a>
+  </nav>
+
+  <script>
+    var API_BASE_URL = "https://5-musketeers-production.up.railway.app";
+
+    function setBadge(id, value) {
+      var el = document.getElementById(id);
+      el.textContent = value;
+      var isOk = (value === "ok");
+      el.className = "badge " + (isOk ? "badge-ok" : "badge-degraded");
+    }
+
+    fetch(API_BASE_URL + "/health")
+      .then(function(res) {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        setBadge("h-status", data.status   ?? "unknown");
+        setBadge("h-api",    data.api      ?? "unknown");
+        setBadge("h-db",     data.database ?? "unknown");
+      })
+      .catch(function(err) {
+        ["h-status","h-api","h-db"].forEach(function(id) {
+          setBadge(id, "unreachable");
+        });
+      });
+  </script>
+</body>
+</html>

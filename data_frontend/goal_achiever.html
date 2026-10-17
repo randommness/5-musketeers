@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Goal Achiever | Product Recommendations</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    .customer-section { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e0e0e0; }
+    .customer-chunk { line-height: 1.7; }
+    .error { color: red; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Goal Achiever — Product Recommendations</h1>
+  <p>Note: Controlled demo — only first 5 customers returned.</p>
+  <div id="loading">Loading, please wait...</div>
+  <div id="customers"></div>
+
+  <script>
+    var API_BASE_URL = "https://5-musketeers-production.up.railway.app";
+
+    function buildSection(customer) {
+      var section = document.createElement("div");
+      section.className = "customer-section";
+      section.id = "customer-" + customer.customer_id;
+
+      // Paragraph 1 — one line per recommended product
+      var productLines = customer.recommended_products.map(function(p, i) {
+        return "Product " + (i + 1) + ":"
+          + " product_name="       + (p.product_name        ?? "")
+          + ", brand="             + (p.brand               ?? "")
+          + ", category="          + (p.product_category    ?? "")
+          + ", pet_type="          + (p.pet_type            ?? "")
+          + ", description="       + (p.product_description ?? "")
+          + ", price="             + (p.price               ?? "")
+          + ", size="              + (p.product_size        ?? "")
+          + ", number_of_reviews=" + (p.number_of_reviews   ?? "")
+          + ", match_reason="      + (p.match_reason        ?? "");
+      });
+
+      var p1 = document.createElement("p");
+      p1.className = "customer-chunk";
+      p1.textContent = "Customer " + customer.customer_id + ". Recommended products: "
+        + productLines.join(" | ");
+      section.appendChild(p1);
+
+      // Paragraph 2 — AI suggestion
+      var p2 = document.createElement("p");
+      p2.className = "customer-chunk";
+      p2.textContent = "AI suggestion: " + (customer.ai_suggestion ?? "");
+      section.appendChild(p2);
+
+      return section;
+    }
+
+    fetch(API_BASE_URL + "/achieve_goals/all")
+      .then(function(res) {
+        if (!res.ok) throw new Error("API returned " + res.status);
+        return res.json();
+      })
+      .then(function(customers) {
+        document.getElementById("loading").style.display = "none";
+        var container = document.getElementById("customers");
+        customers.forEach(function(customer) {
+          container.appendChild(buildSection(customer));
+        });
+      })
+      .catch(function(err) {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("customers").innerHTML =
+          "<p style='color:red'>Failed to load: " + err.message + "</p>";
+      });
+  </script>
+</body>
+</html>
