@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import first_check_in, goal_achiever
+from app.routers import first_check_in, goal_achiever, products
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Customer data & insights API")
@@ -21,5 +21,6 @@ def create_app() -> FastAPI:
 
     app.include_router(first_check_in.router)
     app.include_router(goal_achiever.router)
+    app.include_router(products.router)
 
     return app
