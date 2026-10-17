@@ -2,70 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Check-In | Latest Orders</title>
+  <title>YM Fanclub ❤️ Customer Data Website</title>
   <style>
-    body { font-family: sans-serif; margin: 2rem; }
-    .customer-section { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e0e0e0; }
-    .customer-chunk { line-height: 1.7; }
-    .error { color: red; margin-top: 0.5rem; }
+    body { font-family: sans-serif; margin: 2rem; max-width: 600px; }
+    h1 { margin-bottom: 0.25rem; }
+
+    /* Health status block */
+    #health-box {
+      margin: 1rem 0 2rem;
+      padding: 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      background: #f7f8fa;
+    }
+    #health-box h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: #57606a; }
+    .health-row { display: flex; gap: 0.5rem; align-items: center; margin: 0.25rem 0; font-size: 0.9rem; }
+    .badge { padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: bold; font-size: 0.8rem; }
+    .badge-ok       { background: #d1fae5; color: #065f46; }
+    .badge-degraded { background: #fee2e2; color: #991b1b; }
+    .badge-loading  { background: #e5e7eb; color: #6b7280; }
+
+    /* Landing page links */
+    nav { display: flex; flex-direction: column; gap: 0.75rem; }
+    nav a {
+      display: block;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      text-decoration: none;
+      color: #1f2328;
+      background: #ffffff;
+    }
+    nav a:hover { background: #f0f4ff; border-color: #3b82d4; }
+    nav a .link-title { font-weight: bold; }
+    nav a .link-desc  { font-size: 0.85rem; color: #57606a; margin-top: 0.15rem; }
   </style>
 </head>
 <body>
-  <h1>Check-In — Latest Orders</h1>
-  <h2>Note: Controlled demo - Only first 5 customers returned</h2>
-  <div id="loading">Loading, please wait...</div>
-  <div id="customers"></div>
+  <h1>YM Fanclub ❤️ Customer Data Website</h1>
+  <p style="color:#57606a; margin-top:0.25rem;">Internal developer portal</p>
+
+  <!-- Health status -->
+  <div id="health-box">
+    <h3>API Health</h3>
+    <div class="health-row">Status: <span class="badge badge-loading" id="h-status">checking…</span></div>
+    <div class="health-row">API: <span class="badge badge-loading" id="h-api">—</span></div>
+    <div class="health-row">Database: <span class="badge badge-loading" id="h-db">—</span></div>
+  </div>
+
+  <!-- Landing page links -->
+  <nav>
+    <a href="check_in" target="_blank">
+      <div class="link-title">Check-In — Latest Orders</div>
+      <div class="link-desc">Latest delivered order per customer + AI usage suggestion</div>
+    </a>
+    <a href="goal_achiever" target="_blank">
+      <div class="link-title">Goal Achiever — Product Recommendations</div>
+      <div class="link-desc">Products matching each customer's brand and category preferences</div>
+    </a>
+    <a href="products" target="_blank">
+      <div class="link-title">Products — Full Catalogue</div>
+      <div class="link-desc">Complete list of all products in the catalogue</div>
+    </a>
+    <a href="product_pair" target="_blank">
+      <div class="link-title">Product Pairing — Smart Recommendations</div>
+      <div class="link-desc">Association-rule and similarity-based product pair recommendations</div>
+    </a>
+  </nav>
 
   <script>
     var API_BASE_URL = "https://5-musketeers-production.up.railway.app";
 
-    function buildSection(user) {
-      var section = document.createElement("div");
-      section.className = "customer-section";
-      section.id = "customer-" + user.customer_id;
-
-      // Paragraph 1 — purchase info
-      var purchaseInfo = "Customer " + user.customer_id + ". Purchase info:"
-        + " product_name="        + (user.product_name        ?? "")
-        + ", category="           + (user.product_category    ?? "")
-        + ", pet_type="           + (user.pet_type            ?? "")
-        + ", brand="              + (user.brand               ?? "")
-        + ", description="        + (user.product_description ?? "")
-        + ", weight="             + (user.product_weight      ?? "")
-        + ", size="               + (user.product_size        ?? "")
-        + ", packaging="          + (user.packaging_type      ?? "")
-        + ", rating="             + (user.product_rating      ?? "")
-        + ", number_of_reviews="  + (user.number_of_reviews   ?? "");
-
-      var p1 = document.createElement("p");
-      p1.className = "customer-chunk";
-      p1.textContent = purchaseInfo;
-      section.appendChild(p1);
-
-      // Paragraph 2 — AI suggestion
-      var p2 = document.createElement("p");
-      p2.className = "customer-chunk";
-      p2.textContent = "AI suggestion: " + (user.ai_suggestion ?? "");
-      section.appendChild(p2);
-      return section;
+    function setBadge(id, value) {
+      var el = document.getElementById(id);
+      el.textContent = value;
+      var isOk = (value === "ok");
+      el.className = "badge " + (isOk ? "badge-ok" : "badge-degraded");
     }
 
-    fetch(API_BASE_URL + "/check_in/all")
+    fetch(API_BASE_URL + "/health")
       .then(function(res) {
-        if (!res.ok) throw new Error("API returned " + res.status);
+        if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
       })
-      .then(function(users) {
-        document.getElementById("loading").style.display = "none";
-        var container = document.getElementById("customers");
-        users.forEach(function(user) {
-          container.appendChild(buildSection(user));
-        });
+      .then(function(data) {
+        setBadge("h-status", data.status   ?? "unknown");
+        setBadge("h-api",    data.api      ?? "unknown");
+        setBadge("h-db",     data.database ?? "unknown");
       })
       .catch(function(err) {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("customers").innerHTML =
-          "<p style='color:red'>Failed to load: " + err.message + "</p>";
+        ["h-status","h-api","h-db"].forEach(function(id) {
+          setBadge(id, "unreachable");
+        });
       });
   </script>
 </body>

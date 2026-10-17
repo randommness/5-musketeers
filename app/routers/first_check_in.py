@@ -5,7 +5,7 @@ from app.services import check_in_service
 
 router = APIRouter(prefix="/check_in", tags=["First Use Check In"])
 
-# GET /first_check_in/{user_id}
+# GET /first_check_in/all
 
 @router.get("/all")
 def get_latest_order(db: Session = Depends(get_db)):

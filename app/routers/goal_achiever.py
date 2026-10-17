@@ -5,7 +5,7 @@ from app.services import goal_achiever_service
 
 router = APIRouter(prefix="/achieve_goals", tags=["Help user achieve pet goals"])
 
-# GET /goal_achiever/{user_id}
+# GET /goal_achiever/all
 
 @router.get("/all")
 def get_latest_order(db: Session = Depends(get_db)):

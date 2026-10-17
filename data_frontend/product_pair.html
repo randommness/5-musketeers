@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Pairing | Smart Recommendations</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    .product-section { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #e0e0e0; }
+    .product-chunk { line-height: 1.7; }
+    .error { color: red; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h1>Product Pairing — Smart Recommendations</h1>
+  <p>Note: Controlled demo — only first 5 products returned.</p>
+  <div id="loading">Loading, please wait...</div>
+  <div id="products"></div>
+
+  <script>
+    var API_BASE_URL = "https://5-musketeers-production.up.railway.app";
+
+    function buildSection(entry) {
+      var section = document.createElement("div");
+      section.className = "product-section";
+      section.id = "product-a-" + entry.product_a_id;
+
+      // Paragraph 1 — Product A info
+      var info = entry.product_a_info ?? {};
+      var p1 = document.createElement("p");
+      p1.className = "product-chunk";
+      p1.textContent = "Product A: " + entry.product_a_id
+        + ". product_name="        + (info.product_a_name        ?? "")
+        + ", brand="               + (info.product_a_brand       ?? "")
+        + ", category="            + (info.product_a_category    ?? "")
+        + ", description="         + (info.product_a_description ?? "")
+        + ", price="               + (info.product_a_price       ?? "")
+        + ", size="                + (info.product_a_size        ?? "");
+      section.appendChild(p1);
+
+      // Paragraph 2 — Recommended pairs with reasons
+      var pairs = entry.recommended_pairs ?? [];
+      var pairLines = pairs.map(function(p, i) {
+        return "Recommendation " + (i + 1) + ":"
+          + " product_b_id="          + (p.product_b_id          ?? "")
+          + ", product_name="         + (p.product_b_name        ?? "")
+          + ", brand="                + (p.product_b_brand       ?? "")
+          + ", category="             + (p.product_b_category    ?? "")
+          + ", description="          + (p.product_b_description ?? "")
+          + ", price="                + (p.product_b_price       ?? "")
+          + ", size="                 + (p.product_b_size        ?? "")
+          + ", reason="               + (p.reason                ?? "");
+      });
+
+      var p2 = document.createElement("p");
+      p2.className = "product-chunk";
+      p2.textContent = pairLines.length > 0
+        ? "Recommended pairs: " + pairLines.join(" | ")
+        : "Recommended pairs: none";
+      section.appendChild(p2);
+
+      return section;
+    }
+
+    fetch(API_BASE_URL + "/product_pair/all")
+      .then(function(res) {
+        if (!res.ok) throw new Error("API returned " + res.status);
+        return res.json();
+      })
+      .then(function(entries) {
+        document.getElementById("loading").style.display = "none";
+        var container = document.getElementById("products");
+        entries.forEach(function(entry) {
+          container.appendChild(buildSection(entry));
+        });
+      })
+      .catch(function(err) {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("products").innerHTML =
+          "<p style='color:red'>Failed to load: " + err.message + "</p>";
+      });
+  </script>
+</body>
+</html>
