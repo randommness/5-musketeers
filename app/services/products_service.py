@@ -23,7 +23,8 @@ def get_products_list(db: Session):
                number_of_reviews,
                product_expiry_date,
                subscription_availability
-        FROM public.product_info;
+        FROM public.product_info
+        ORDER BY product_id ASC;
         """)
     ).fetchall()
 
