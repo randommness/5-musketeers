@@ -36,16 +36,57 @@ def list_all_shops(db: Session):
     _cache["all_shops"] = {"result": rows, "cached_at": time.time()}
     return rows
 
-def list_products(db: Session, product_id: Optional[str] = None):
-    # Cache key differs depending on whether filtering by a specific product or returning all
-    cache_key = f"product:{product_id}" if product_id else "all_products"
+def _parse_range_filter(column: str, value: str, params: dict) -> str:
+    """Parse >n / <n / n into a SQL condition. Bound value is stored in params."""
+    param_key = column
+    if value.startswith(">="):
+        params[param_key] = float(value[2:])
+        return f"{column} >= :{param_key}"
+    elif value.startswith(">"):
+        params[param_key] = float(value[1:])
+        return f"{column} >= :{param_key}"
+    elif value.startswith("<="):
+        params[param_key] = float(value[2:])
+        return f"{column} <= :{param_key}"
+    elif value.startswith("<"):
+        params[param_key] = float(value[1:])
+        return f"{column} <= :{param_key}"
+    else:
+        params[param_key] = float(value)
+        return f"{column} = :{param_key}"
 
-    cached = _cache.get(cache_key)
-    if cached and (time.time() - cached["cached_at"]) < CACHE_TTL_SECONDS:
-        logger.debug("Cache hit for '%s' — returning %d cached product(s)", cache_key, len(cached["result"]))
-        return cached["result"]
 
-    logger.debug("Cache miss for '%s' — querying DB", cache_key)
+def list_products(
+    db: Session,
+    product_id: Optional[str] = None,
+    product_category: Optional[str] = None,
+    pet_type: Optional[str] = None,
+    brand: Optional[str] = None,
+    unit_price: Optional[str] = None,
+    currency: Optional[str] = None,
+    product_weight: Optional[str] = None,
+    weight_unit: Optional[str] = None,
+    packaging_type: Optional[str] = None,
+    product_size: Optional[str] = None,
+    product_rating: Optional[str] = None,
+    number_of_reviews: Optional[str] = None,
+    subscription_availability: Optional[bool] = None,
+    limit: Optional[int] = None,
+):
+    # Only cache the fully unfiltered result — filtered/limited queries are too varied to cache reliably
+    is_unfiltered = not any([
+        product_id, product_category, pet_type, brand, unit_price, currency,
+        product_weight, weight_unit, packaging_type, product_size,
+        product_rating, number_of_reviews, subscription_availability is not None,
+        limit is not None,
+    ])
+
+    if is_unfiltered:
+        cached = _cache.get("all_products")
+        if cached and (time.time() - cached["cached_at"]) < CACHE_TTL_SECONDS:
+            logger.debug("Cache hit for 'all_products' — returning %d cached product(s)", len(cached["result"]))
+            return cached["result"]
+        logger.debug("Cache miss for 'all_products' — querying DB")
 
     base_query = """
         SELECT product_id,
@@ -54,8 +95,10 @@ def list_products(db: Session, product_id: Optional[str] = None):
                pet_type,
                brand,
                product_description,
-               CONCAT(unit_price, ' ', currency) AS price_per_unit,
-               CONCAT(product_weight, ' ', weight_unit) AS weight_per_unit,
+               unit_price,
+               currency,
+               product_weight,
+               weight_unit,
                packaging_type,
                product_size,
                product_rating,
@@ -65,22 +108,63 @@ def list_products(db: Session, product_id: Optional[str] = None):
         FROM public.product_info
     """
 
+    conditions: list[str] = []
+    params: dict = {}
+
+    # Exact-match filters
     if product_id:
-        result: Any = db.execute(
-            text(base_query + "WHERE product_id = :product_id ORDER BY product_id ASC;"),
-            {"product_id": product_id}
-        ).fetchall()
-    else:
-        result = db.execute(
-            text(base_query + "ORDER BY product_id ASC;")
-        ).fetchall()
+        conditions.append("product_id = :product_id")
+        params["product_id"] = product_id
+    if product_category:
+        conditions.append("product_category = :product_category")
+        params["product_category"] = product_category
+    if pet_type:
+        conditions.append("pet_type = :pet_type")
+        params["pet_type"] = pet_type
+    if brand:
+        conditions.append("brand = :brand")
+        params["brand"] = brand
+    if currency:
+        conditions.append("currency = :currency")
+        params["currency"] = currency
+    if weight_unit:
+        conditions.append("weight_unit = :weight_unit")
+        params["weight_unit"] = weight_unit
+    if packaging_type:
+        conditions.append("packaging_type = :packaging_type")
+        params["packaging_type"] = packaging_type
+    if product_size:
+        conditions.append("product_size = :product_size")
+        params["product_size"] = product_size
+    if subscription_availability is not None:
+        conditions.append("subscription_availability = :subscription_availability")
+        params["subscription_availability"] = subscription_availability
+
+    # Range filters: >n / >=n / <n / <=n / n (exact)
+    if unit_price:
+        conditions.append(_parse_range_filter("unit_price", unit_price, params))
+    if product_weight:
+        conditions.append(_parse_range_filter("product_weight", product_weight, params))
+    if product_rating:
+        conditions.append(_parse_range_filter("product_rating", product_rating, params))
+    if number_of_reviews:
+        conditions.append(_parse_range_filter("number_of_reviews", number_of_reviews, params))
+
+    where_clause = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+    limit_clause = f" LIMIT {limit}" if limit is not None else ""
+    result: Any = db.execute(
+        text(base_query + where_clause + " ORDER BY product_id ASC" + limit_clause + ";"),
+        params
+    ).fetchall()
 
     rows = [dict(row._mapping) for row in result]
 
-    if not rows and product_id:
-        logger.warning("No product found for product_id '%s'", product_id)
+    if not rows and conditions:
+        logger.warning("No products found for applied filters")
     else:
-        logger.debug("SQL returned %d product(s) for '%s'", len(rows), cache_key)
+        logger.debug("SQL returned %d product(s)", len(rows))
 
-    _cache[cache_key] = {"result": rows, "cached_at": time.time()}
+    if is_unfiltered:
+        _cache["all_products"] = {"result": rows, "cached_at": time.time()}
+
     return rows
