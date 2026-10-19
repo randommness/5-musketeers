@@ -8,5 +8,5 @@ router = APIRouter(prefix="/product_pair", tags=["Product pairing"])
 # GET /product_pair/all
 
 @router.get("/all")
-def get_latest_order(db: Session = Depends(get_db)):
+def get_product_pair(db: Session = Depends(get_db)):
     return product_pair_service.pair_product_recommendation(db)
