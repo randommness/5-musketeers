@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Profile | Pet Guardian</title>
+<style>
+:root {
+  --cream: #FFF8F5;
+  --pink: #FFC5D3;
+  --peach: #FFCBA5;
+  --peach-deep: #FFB58A;
+  --ink: #3A2E2B;
+  --ink-soft: rgba(58,46,43,.68);
+  --line: rgba(58,46,43,.35);
+  --pink-tint: #FFE3EA;
+  --green: #21864b;
+  --error: #A3262A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body { font-family: "Nunito","Segoe UI",system-ui,Arial,sans-serif; background: var(--cream); color: var(--ink); line-height: 1.45; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+header { background: var(--pink); box-shadow: 0 2px 0 rgba(58,46,43,.08); }
+.top { display: flex; align-items: center; gap: 20px; max-width: 1280px; min-height: 72px; margin: 0 auto; padding: 10px 24px; }
+.brand-logo { display: block; width: 150px; height: 52px; object-fit: contain; }
+.top nav { display: flex; align-items: center; gap: 22px; margin-left: auto; font-weight: 800; }
+.top nav a { padding: 10px 4px; }
+.top nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.cart, .avatar { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
+.cart { position: relative; background: var(--cream); }
+.cart-count { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; display: grid; place-items: center; border-radius: 10px; background: var(--peach); border: 1.5px solid var(--ink); font-size: 11px; font-weight: 800; }
+.avatar { border: 2px dashed var(--ink-soft); background: var(--pink-tint); }
+main { max-width: 1000px; margin: 0 auto; padding: 34px 24px 64px; }
+h1 { margin-bottom: 8px; font-size: 26px; text-align: center; }
+.lead { margin: 0 auto 26px; max-width: 640px; color: var(--ink-soft); text-align: center; }
+.panel { margin-bottom: 22px; padding: 26px; background: #fff; border: 1.5px solid var(--pink); border-radius: 16px; }
+.panel h2 { margin-bottom: 18px; font-size: 20px; }
+.section-description { margin: -10px 0 22px; color: var(--ink-soft); font-size: 14px; }
+.profile-photo { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 22px; }
+.photo-preview { display: grid; place-items: center; width: 112px; height: 112px; overflow: hidden; border: 3px solid var(--pink); border-radius: 50%; background: var(--pink-tint); font-size: 42px; }
+.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.photo-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.photo-actions label, .secondary { padding: 9px 14px; border: 0; border-radius: 20px; background: var(--pink-tint); font-weight: 800; cursor: pointer; }
+.photo-actions input { max-width: 220px; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+label.field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700; }
+input:not([type="file"]) { min-height: 46px; padding: 9px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; font: inherit; }
+.help { margin-top: 8px; color: var(--ink-soft); font-size: 13px; }
+.cta { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 20px; border: 0; border-radius: 23px; background: var(--peach); font-weight: 800; }
+.cta:hover { background: var(--peach-deep); }
+.password-field { position: relative; }
+.password-field input { width: 100%; padding-right: 72px !important; }
+.password-toggle { position: absolute; top: 36px; right: 10px; border: 0; background: transparent; color: var(--ink-soft); font-size: 12px; font-weight: 800; text-decoration: underline; }
+.status { min-height: 24px; margin-top: 12px; font-weight: 700; }
+.status.success { color: var(--green); }
+.status.error { color: var(--error); }
+.form-actions { margin-top: 18px; }
+.notice { padding: 12px 16px; border-radius: 10px; background: var(--pink-tint); color: var(--ink-soft); font-size: 13px; }
+footer { padding: 24px; background: var(--pink); text-align: center; font-size: 13px; }
+@media (max-width: 600px) {
+  .wrap { padding: 0 16px; }
+  .top { flex-wrap: wrap; gap: 12px; padding: 10px 16px; }
+  .brand-logo { width: 126px; }
+  .top nav { order: 3; width: 100%; justify-content: space-between; gap: 10px; font-size: 13px; margin-left: 0; }
+  .panel { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <a href="Home.html" aria-label="Pet Guardian home"><img class="brand-logo" src="website_logo.jpeg" alt="Pet Guardian"></a>
+    <nav aria-label="Profile navigation">
+      <a href="Home.html">Continue shopping</a>
+      <a href="Cart.html#tracking">Track orders</a>
+    </nav>
+    <div class="header-actions">
+      <a class="cart" href="Cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
+      <a class="avatar" href="Profile.html" aria-label="Profile">👤</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>My Profile</h1>
+  <p class="lead">Update your profile details and manage your demo account settings.</p>
+
+  <section class="panel" aria-labelledby="profile-heading">
+    <h2 id="profile-heading">Personal information</h2>
+    <form id="profile-form">
+      <div class="profile-photo">
+        <div class="photo-preview" id="photo-preview" aria-label="Profile picture preview">👤</div>
+        <div class="photo-actions">
+          <label for="photo-input">Change profile picture</label>
+          <input id="photo-input" type="file" accept="image/*" hidden>
+          <button type="button" class="secondary" id="remove-photo">Remove picture</button>
+        </div>
+      </div>
+      <div class="fields">
+        <label class="field">Full name<input name="name" autocomplete="name" required></label>
+        <label class="field">Email address<input name="email" type="email" autocomplete="email" required></label>
+        <label class="field">Address<input name="address" autocomplete="street-address"></label>
+      </div>
+      <div class="form-actions"><button class="cta" type="submit">Save profile</button></div>
+      <p class="status" id="profile-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="password-heading">
+    <h2 id="password-heading">Reset password</h2>
+    <form id="password-form">
+      <div class="fields">
+        <label class="field password-field">New password<input name="password" type="password" minlength="8" autocomplete="new-password" required><button type="button" class="password-toggle" aria-pressed="false">Show</button></label>
+        <label class="field password-field">Confirm new password<input name="confirmPassword" type="password" minlength="8" autocomplete="new-password" required><button type="button" class="password-toggle" aria-pressed="false">Show</button></label>
+      </div>
+      <p class="help">Use at least 8 characters. Password reset is a demo and does not change a real account password.</p>
+      <div class="form-actions"><button class="cta" type="submit">Reset password</button></div>
+      <p class="status" id="password-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="account-heading">
+    <h2 id="account-heading">Account</h2>
+    <p class="section-description">Sign out of this demo account on this device. Your saved profile and cart will stay here.</p>
+    <button class="cta" type="button" id="sign-out">Sign out</button>
+  </section>
+</main>
+
+<footer>Pet Guardian demo shop</footer>
+<script>
+const PROFILE_KEY = "petGuardianProfile";
+const CART_KEY = "petGuardianCart";
+const AUTH_KEY = "petGuardianSignedIn";
+const form = document.getElementById("profile-form");
+const photoInput = document.getElementById("photo-input");
+let profilePhoto = "";
+
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+  const count = Array.isArray(cart)
+    ? cart.reduce((total, item) => total + item.quantity, 0)
+    : 0;
+  document.querySelectorAll(".cart-count").forEach(element => {
+    element.textContent = count;
+  });
+}
+
+function renderPhoto() {
+  const preview = document.getElementById("photo-preview");
+  preview.replaceChildren();
+  if (!profilePhoto) {
+    preview.textContent = "👤";
+    return;
+  }
+  const image = document.createElement("img");
+  image.src = profilePhoto;
+  image.alt = "Your profile picture";
+  preview.append(image);
+}
+
+function setStatus(element, message, isError) {
+  element.textContent = message;
+  element.className = `status ${isError ? "error" : "success"}`;
+}
+
+try {
+  const savedProfile = JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}");
+  form.elements.name.value = savedProfile.name || "";
+  form.elements.email.value = savedProfile.email || "";
+  form.elements.address.value = savedProfile.address || "";
+  profilePhoto = savedProfile.photo || "";
+  renderPhoto();
+} catch (error) {
+  setStatus(document.getElementById("profile-status"), "Your saved profile could not be read. You can enter your details and save again.", true);
+}
+updateCartCount();
+
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  const profile = {
+    name: form.elements.name.value.trim(),
+    email: form.elements.email.value.trim(),
+    address: form.elements.address.value.trim(),
+    photo: profilePhoto
+  };
+  try {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    setStatus(document.getElementById("profile-status"), "Profile details saved on this device.", false);
+  } catch (error) {
+    setStatus(document.getElementById("profile-status"), "Could not save the profile. The profile picture may be too large for browser storage.", true);
+  }
+});
+
+photoInput.addEventListener("change", () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    setStatus(document.getElementById("profile-status"), "Choose an image file for your profile picture.", true);
+    photoInput.value = "";
+    return;
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    setStatus(document.getElementById("profile-status"), "Choose an image smaller than 2 MB.", true);
+    photoInput.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    if (typeof reader.result !== "string") {
+      setStatus(document.getElementById("profile-status"), "The selected image could not be loaded.", true);
+      return;
+    }
+    profilePhoto = reader.result;
+    renderPhoto();
+    setStatus(document.getElementById("profile-status"), "Picture selected. Save your profile to keep this change.", false);
+  });
+  reader.addEventListener("error", () => {
+    setStatus(document.getElementById("profile-status"), "The selected image could not be loaded.", true);
+  });
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("remove-photo").addEventListener("click", () => {
+  profilePhoto = "";
+  photoInput.value = "";
+  renderPhoto();
+  setStatus(document.getElementById("profile-status"), "Picture removed. Save your profile to keep this change.", false);
+});
+
+document.querySelectorAll(".password-toggle").forEach(button => {
+  button.addEventListener("click", () => {
+    const passwordInput = button.parentElement.querySelector("input");
+    const visible = passwordInput.type === "password";
+    passwordInput.type = visible ? "text" : "password";
+    button.textContent = visible ? "Hide" : "Show";
+    button.setAttribute("aria-pressed", String(visible));
+  });
+});
+
+document.getElementById("password-form").addEventListener("submit", event => {
+  event.preventDefault();
+  const passwordForm = event.currentTarget;
+  const password = passwordForm.elements.password.value;
+  const confirmation = passwordForm.elements.confirmPassword.value;
+  const status = document.getElementById("password-status");
+  if (!passwordForm.reportValidity()) return;
+  if (password !== confirmation) {
+    setStatus(status, "The password fields do not match.", true);
+    passwordForm.elements.confirmPassword.focus();
+    return;
+  }
+  passwordForm.reset();
+  setStatus(status, "Demo password reset accepted. No password was stored or changed on a real account.", false);
+});
+
+document.getElementById("sign-out").addEventListener("click", () => {
+  localStorage.removeItem(AUTH_KEY);
+  window.location.href = "Login.html";
+});
+</script>
+</body>
+</html>
