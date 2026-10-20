@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers import health, first_check_in, goal_achiever, products, product_pair
-from app.routers import api_catalog, api_login, api_customer_dashboard, api_retail, api_new_order, api_new_review
+from app.routers import api_catalog, api_login, api_customer_dashboard, api_retail, api_new_order, api_new_review, api_update_order
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Customer data & insights API")
@@ -16,7 +16,7 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"], #allowed_origins,
-        allow_methods=["GET", "POST"],
+        allow_methods=["GET", "POST", "PATCH"],
         allow_headers=["*"],
     )
 
@@ -32,5 +32,6 @@ def create_app() -> FastAPI:
     app.include_router(api_retail.router)
     app.include_router(api_new_order.router)
     app.include_router(api_new_review.router)
+    app.include_router(api_update_order.router)
     
     return app

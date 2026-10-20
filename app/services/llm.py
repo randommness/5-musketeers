@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-LLM_URL = os.getenv("LLM_API_BASE_URL")
+LLM_URL = os.getenv("LLM_API_BASE_URL", "Not found")
 LLM_MODEL = "google/gemini-3.1-flash-lite"
 
 DEFAULT_SYSTEM_PROMPT = (
