@@ -1,8 +1,11 @@
 import os
 import requests
+from dotenv import load_dotenv
 
-LLM_URL = os.getenv("LLM_API_BASE_URL")
-LLM_MODEL = "gpt-oss-120b-fast"
+load_dotenv()
+
+LLM_URL = os.getenv("LLM_API_BASE_URL", "Not found")
+LLM_MODEL = "google/gemini-3.1-flash-lite"
 
 DEFAULT_SYSTEM_PROMPT = (
     "You are an expert assistant for a pet care business that sells products, "
@@ -30,3 +33,6 @@ def chat(user_prompt: str, system_prompt: str = DEFAULT_SYSTEM_PROMPT) -> str:
     )
     response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"]
+
+if __name__ == "__main__":
+    print(chat("Hi"))
