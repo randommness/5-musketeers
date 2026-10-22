@@ -566,91 +566,6 @@ footer {
 .store summary h2 { display: inline; margin: 0; }
 .store[open] summary { margin-bottom: 14px; }
 
-/* Chatbot */
-.chat {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.chat-panel {
-  width: 320px;
-  max-width: calc(100vw - 44px);
-  height: 400px;
-  background: var(--cream);
-  border: 2px solid var(--ink);
-  border-radius: 16px;
-  box-shadow: 0 16px 40px rgba(58,46,43,.25);
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.chat-panel.open { display: flex; }
-
-.chat-head {
-  background: var(--pink);
-  padding: 12px 16px;
-  font-weight: 800;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chat-head button { background: none; border: 0; font-size: 20px; }
-
-.chat-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  padding: 14px;
-  color: var(--ink-soft);
-  font-size: 13px;
-  overflow-y: auto;
-}
-
-.chat-message {
-  max-width: 90%;
-  padding: 9px 12px;
-  border-radius: 13px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.chat-message.bot { align-self: flex-start; background: #fff; border: 1px solid var(--pink); }
-.chat-message.user { align-self: flex-end; background: var(--peach); color: var(--ink); }
-
-.chat-input { display: flex; gap: 8px; padding: 10px; }
-.chat-input input {
-  flex: 1;
-  min-width: 0;
-  height: 38px;
-  border: 1.5px solid var(--line);
-  border-radius: 19px;
-  padding: 0 14px;
-  font: inherit;
-}
-
-.chat-input button { border: 0; background: var(--peach); border-radius: 19px; padding: 0 14px; font-weight: 800; }
-
-.chat-fab {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid var(--ink);
-  background: var(--peach);
-  display: grid;
-  place-items: center;
-  box-shadow: 0 6px 0 rgba(58,46,43,.2);
-}
-
 @media (max-width: 820px) {
   .top { flex-wrap: wrap; gap: 12px; }
   .search { order: 3; flex-basis: 100%; max-width: none; }
@@ -948,31 +863,6 @@ footer {
 <footer>
   <div class="wrap">© Pet Guardian. All rights reserved.</div>
 </footer>
-
-<!-- CHATBOT -->
-<div class="chat">
-  <div class="chat-panel" id="chat-panel" role="dialog" aria-label="Pet Guardian chatbot">
-    <div class="chat-head">
-      <span>Pet Guardian Assistant 🐾</span>
-      <button id="chat-close" type="button" aria-label="Close chat">×</button>
-    </div>
-
-    <div class="chat-body" id="chat-body" aria-live="polite">
-      <div class="chat-message bot">
-        Hi! 🐾 Welcome to Pet Guardian. Ask me about products, membership, renewals, delivery, or returns.
-      </div>
-    </div>
-
-    <form class="chat-input" id="chat-form">
-      <input id="chat-message" type="text" placeholder="Ask me anything..." required>
-      <button type="submit">Send</button>
-    </form>
-  </div>
-
-  <button class="chat-fab" id="chat-fab" type="button" aria-label="Open chatbot" aria-expanded="false">
-    💬
-  </button>
-</div>
 
 <script src="shop-data.js"></script>
 <script src="products-api.js"></script>
@@ -1348,99 +1238,6 @@ document.addEventListener("keydown", event => {
   }
 });
 
-// CHATBOT OPEN AND CLOSE
-const chatFab = document.getElementById("chat-fab");
-const chatPanel = document.getElementById("chat-panel");
-const chatInput = document.getElementById("chat-message");
-
-function toggleChat(open) {
-  chatPanel.classList.toggle("open", open);
-  chatFab.setAttribute("aria-expanded", String(open));
-
-  if (open) chatInput.focus();
-}
-
-chatFab.addEventListener("click", () => {
-  toggleChat(!chatPanel.classList.contains("open"));
-});
-
-document.getElementById("chat-close").addEventListener("click", () => {
-  toggleChat(false);
-});
-
-// CHATBOT MESSAGES
-const chatBody = document.getElementById("chat-body");
-const chatForm = document.getElementById("chat-form");
-
-function addChatMessage(message, sender) {
-  const element = document.createElement("div");
-  element.className = "chat-message " + sender;
-  element.textContent = message;
-
-  chatBody.appendChild(element);
-  chatBody.scrollTop = chatBody.scrollHeight;
-}
-
-function getBotReply(message) {
-  const text = message.toLowerCase();
-
-  if (/hello|hi\b|hey|good morning|good afternoon/.test(text)) {
-    return "Hello! 🐾 How can I help you and your pet today?";
-  }
-
-  if (/membership|silver|gold|platinum|benefit|plan|points/.test(text)) {
-    return "Our demo membership plans are Silver ($18/year), Gold ($38/year), and Platinum ($68/year). Visit Membership → Membership Benefits to compare them. These are sample prices.";
-  }
-
-  if (/renew|expiry|expired/.test(text)) {
-    return "Choose Membership → Renew Membership and complete the form. This is a demo and does not renew a real membership or process payment.";
-  }
-
-  if (/delivery|shipping|deliver|ship|arrive/.test(text)) {
-    return "Our delivery policy has not been configured yet. Please check the official store policy before placing a real order.";
-  }
-
-  if (/return|refund|exchange|cancel/.test(text)) {
-    return "Our return and refund policy has not been connected to this demo. Please contact the store team about a real order.";
-  }
-
-  if (/cat|kitten|dog|puppy|fish|rabbit|food|treat|product|buy|price/.test(text)) {
-    return "You can browse the products on our homepage, adjust the quantity, and click Add to cart. Product details and prices are sample data. For pet health or diet concerns, ask a veterinarian.";
-  }
-
-  if (/cart|checkout|payment|pay/.test(text)) {
-    return "The cart is a front-end demonstration only. Real checkout and payment processing are not connected.";
-  }
-
-  if (/contact|email|phone|human|staff|support/.test(text)) {
-    return "Official store contact details have not been added yet. Add your business email or phone number before publishing the website.";
-  }
-
-  if (/thank/.test(text)) {
-    return "You're welcome! 🐾 Let me know if there's anything else I can help with.";
-  }
-
-  return "I'm the Pet Guardian demo assistant. You can ask me about products, membership plans, renewals, delivery, returns, or the demo cart.";
-}
-
-chatForm.addEventListener("submit", event => {
-  event.preventDefault();
-
-  const message = chatInput.value.trim();
-  if (!message) return;
-
-  addChatMessage(message, "user");
-  chatInput.value = "";
-
-  const reply = getBotReply(message);
-  addChatMessage(reply, "bot");
-  chatInput.focus();
-});
-
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape") toggleChat(false);
-});
-
 // MEMBERSHIP PLANS
 const plans = [
   {
@@ -1714,6 +1511,10 @@ document.getElementById("back").addEventListener("click", () => {
 
 routePage();
 updateRenewTotal();
+</script>
+<script>
+
+function a(){const G=['setFullYear','getBoundingClientRect','data-immersive','62710cUmHYi','setAttribute','background','mnatagoLiveChat-clientId-pnel5V5aK','right','data-y','https://livechat.mantago.cc','addEventListener','8536SFhkmr','98yvrcVq','923842lNmXKN','getElementById','zIndex','height','407AhcmjB','createElement','getFullYear','20px','1DhDWuR','data-shift-x','div','getLiveChatCookie',';\x20path=/','message','border','4708418QFoQAS','top','position','100%','154smsKgD','isFull','bottom','fixed','data-x','toUTCString','drag','translate(','trim','width','indexOf','contentWindow','length','360132vQMDAv','mantagoChat-iframe','344UjGJcp','2148156UDAXVU','transparent','1098lxWsYZ','substring','none','value','px,\x20','cookie','transform','data','isOpened','getAttribute','setLiveChatCookie','left','type','innerWidth','13557eCJBVh','origin','style','px)','maxWidth','mantagoChat','10sBjJOr','0px','calc(100vw\x20-\x2040px)'];a=function(){return G;};return a();}function b(c,d){c=c-0x185;const e=a();let f=e[c];return f;}(function(c,d){const C=b,e=c();while(!![]){try{const f=parseInt(C(0x19b))/0x1*(-parseInt(C(0x193))/0x2)+-parseInt(C(0x1c6))/0x3*(parseInt(C(0x1b5))/0x4)+parseInt(C(0x1cc))/0x5*(-parseInt(C(0x1b6))/0x6)+-parseInt(C(0x1a6))/0x7*(parseInt(C(0x191))/0x8)+-parseInt(C(0x1b8))/0x9*(-parseInt(C(0x189))/0xa)+-parseInt(C(0x197))/0xb*(parseInt(C(0x1b3))/0xc)+parseInt(C(0x1a2))/0xd*(parseInt(C(0x192))/0xe);if(f===d)break;else e['push'](e['shift']());}catch(g){e['push'](e['shift']());}}}(a,0x92744),(function(){const D=b;var c=document[D(0x198)](D(0x19d));c[D(0x18a)]('id',D(0x1cb)),c[D(0x1c8)][D(0x1a4)]=D(0x1a9),c[D(0x1c8)][D(0x18d)]=D(0x19a),c['style']['bottom']=D(0x1cd),c[D(0x1c8)][D(0x195)]='9999',c[D(0x1c8)][D(0x1ca)]=D(0x185);var d=document['createElement']('iframe');d[D(0x18a)]('id',D(0x1b4)),d['setAttribute']('src','https://livechat.mantago.cc?botId=pnel5V5aK'),d[D(0x18a)]('allow','microphone;\x20camera;\x20autoplay'),d[D(0x1c8)][D(0x1af)]=D(0x1a5),d[D(0x1c8)]['height']=D(0x1a5),d[D(0x1c8)][D(0x18b)]=D(0x1b7),d[D(0x1c8)][D(0x1a1)]=D(0x1ba),c['appendChild'](d),document['body']['appendChild'](c),window[D(0x190)](D(0x1a0),e=>{const E=D;if(e[E(0x1c7)]===new URL(E(0x18f))[E(0x1c7)]){if(e[E(0x1bf)][E(0x1c4)]==='position'){const f=document[E(0x194)](E(0x1cb)),g=e[E(0x1bf)]['width']==='100vw';f['style'][E(0x1af)]=e[E(0x1bf)][E(0x1af)],f[E(0x1c8)]['height']=e[E(0x1bf)][E(0x196)],f[E(0x1c8)][E(0x1ca)]=g?E(0x1ba):E(0x185),c[E(0x1c8)][E(0x18d)]=g?'0px':e[E(0x1bf)][E(0x1a7)]&&e[E(0x1bf)]['isOpened']?E(0x19a):E(0x19a),c[E(0x1c8)][E(0x1a8)]=g?E(0x1cd):e[E(0x1bf)][E(0x1a7)]&&e[E(0x1bf)][E(0x1c0)]?E(0x19a):E(0x1cd),c[E(0x18a)](E(0x188),g?'1':'0');const h=parseFloat(c[E(0x1c1)](E(0x1aa)))||0x0,i=parseFloat(c[E(0x1c1)](E(0x18e)))||0x0;if(g)c[E(0x18a)](E(0x19c),0x0),c[E(0x18a)]('data-shift-y',0x0),c[E(0x1c8)]['transform']='';else{if(e[E(0x1bf)][E(0x1c0)]){c['style'][E(0x1be)]=E(0x1ad)+h+E(0x1bc)+i+E(0x1c9);const j=c[E(0x187)](),k=j[E(0x1a3)]<0x14?0x14-j[E(0x1a3)]:0x0;let l=0x0;if(j[E(0x1c3)]<0x14)l=0x14-j[E(0x1c3)];else{if(j[E(0x18d)]>window[E(0x1c5)]-0x14)l=window[E(0x1c5)]-0x14-j[E(0x18d)];}c[E(0x18a)](E(0x19c),l),c['setAttribute']('data-shift-y',k),c[E(0x1c8)][E(0x1be)]=E(0x1ad)+(h+l)+E(0x1bc)+(i+k)+'px)';}else c[E(0x18a)](E(0x19c),0x0),c[E(0x18a)]('data-shift-y',0x0),c[E(0x1c8)][E(0x1be)]=E(0x1ad)+h+E(0x1bc)+i+E(0x1c9);}}else{if(e[E(0x1bf)][E(0x1c4)]===E(0x1ac)){if(c['getAttribute'](E(0x188))==='1')return;const m=(parseFloat(c['getAttribute'](E(0x1aa)))||0x0)+e['data']['dx'],n=(parseFloat(c[E(0x1c1)](E(0x18e)))||0x0)+e[E(0x1bf)]['dy'],o=parseFloat(c['getAttribute'](E(0x19c)))||0x0,p=parseFloat(c[E(0x1c1)]('data-shift-y'))||0x0;c[E(0x1c8)][E(0x1be)]=E(0x1ad)+(m+o)+'px,\x20'+(n+p)+E(0x1c9),c[E(0x18a)](E(0x1aa),m),c[E(0x18a)](E(0x18e),n);}else{if(e[E(0x1bf)][E(0x1c4)]===E(0x1c2)){const q=new Date();q[E(0x186)](q[E(0x199)]()+0xa);const r=';\x20expires='+q[E(0x1ab)]();document[E(0x1bd)]=e[E(0x1bf)]['name']+'='+encodeURIComponent(e[E(0x1bf)][E(0x1bb)])+r+E(0x19f);}else{if(e[E(0x1bf)][E(0x1c4)]===E(0x19e)){const s=v=>{const F=E,w=v+'=',z=document[F(0x1bd)]['split'](';');for(let A=0x0;A<z['length'];A++){let B=z[A][F(0x1ae)]();if(B[F(0x1b0)](w)===0x0)return decodeURIComponent(B[F(0x1b9)](w[F(0x1b2)]));}return null;},t=s(E(0x18c)),u={'type':'updateLiveChatClientId','value':t};d[E(0x1b1)]['postMessage'](u,E(0x18f));}else e[E(0x1bf)]['type']==='removeLiveChatCookie'&&(document['cookie']=E(0x18c)+'=;\x20expires=Thu,\x2001\x20Jan\x201970\x2000:00:00\x20UTC;\x20path=/;');}}}}});}()));
 </script>
 </body>
 </html>
