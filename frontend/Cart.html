@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Cart | Pet Guardian</title>
+<style>
+:root {
+  --cream: #FFF8F5;
+  --pink: #FFC5D3;
+  --peach: #FFCBA5;
+  --peach-deep: #FFB58A;
+  --ink: #3A2E2B;
+  --ink-soft: rgba(58,46,43,.68);
+  --line: rgba(58,46,43,.35);
+  --pink-tint: #FFE3EA;
+  --green: #21864b;
+  --error: #A3262A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body { font-family: "Nunito","Segoe UI",system-ui,Arial,sans-serif; background: var(--cream); color: var(--ink); line-height: 1.45; }
+a { color: inherit; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+header { background: var(--pink); box-shadow: 0 2px 0 rgba(58,46,43,.08); }
+.top { min-height: 72px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 18px; }
+.brand-link { display: block; flex: none; }
+.brand-logo { display: block; width: 150px; height: 52px; object-fit: contain; }
+.top nav { display: flex; align-items: center; justify-content: center; gap: 24px; font-weight: 800; }
+.top a { text-decoration: none; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.header-actions { justify-self: end; }
+.cart, .avatar, .history { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; text-decoration: none; }
+.cart { position: relative; background: var(--cream); }
+.history { border: 2px solid var(--ink-soft); background: var(--pink-tint); }
+.cart-count { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; display: grid; place-items: center; border-radius: 10px; background: var(--peach); border: 1.5px solid var(--ink); font-size: 11px; font-weight: 800; }
+.avatar { border: 2px dashed var(--ink-soft); background: var(--pink-tint); color: var(--ink-soft); }
+h1 { font-size: 26px; }
+main { padding-top: 32px; padding-bottom: 64px; }
+.intro { margin-bottom: 22px; color: var(--ink-soft); }
+.panel { padding: 24px; margin-bottom: 20px; background: #fff; border: 1.5px solid var(--pink); border-radius: 16px; }
+.panel h2 { margin-bottom: 16px; font-size: 20px; }
+.cart-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.cart-row:first-child { padding-top: 0; }
+.cart-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.product-name { font-weight: 800; }
+.muted { color: var(--ink-soft); font-size: 14px; }
+.quantity { display: flex; align-items: center; gap: 8px; }
+.quantity button, .remove { border: 0; background: var(--pink-tint); border-radius: 8px; padding: 6px 10px; font-weight: 800; }
+.remove { color: var(--error); background: none; text-decoration: underline; }
+.summary { display: grid; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.summary div { display: flex; justify-content: space-between; gap: 12px; }
+.summary .grand { font-size: 18px; font-weight: 800; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 16px; }
+label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700; }
+input:not([type="radio"]), select { min-height: 44px; padding: 8px 14px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; font: inherit; }
+.choice { display: flex; align-items: flex-start; gap: 10px; padding: 12px; background: var(--pink-tint); border-radius: 10px; }
+.choice label { flex-direction: row; align-items: flex-start; cursor: pointer; }
+.cta { display: inline-flex; justify-content: center; align-items: center; min-height: 46px; padding: 10px 20px; border: 0; border-radius: 23px; background: var(--peach); text-decoration: none; font-weight: 800; }
+.cta:hover { background: var(--peach-deep); }
+.cta:disabled { opacity: .5; cursor: not-allowed; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.secondary { background: var(--pink-tint); }
+.order-card { margin-bottom: 16px; padding: 20px; background: #fff; border: 1.5px solid var(--pink); border-radius: 14px; }
+.order-card h2 { margin-bottom: 8px; }
+.status { display: inline-block; margin: 10px 0; padding: 5px 12px; border-radius: 16px; background: var(--pink-tint); font-weight: 800; }
+.status-steps { position: relative; display: grid; gap: 0; margin: 14px 0 18px 8px; list-style: none; }
+.status-steps::before { content: ""; position: absolute; top: 12px; bottom: 12px; left: 11px; width: 2px; background: var(--line); }
+.status-steps li { position: relative; display: flex; align-items: center; gap: 12px; min-height: 38px; color: var(--ink-soft); font-size: 14px; }
+.status-steps .step-marker { position: relative; z-index: 1; display: grid; place-items: center; width: 24px; height: 24px; flex: none; border: 2px solid var(--line); border-radius: 50%; background: var(--cream); font-size: 12px; }
+.status-steps li.complete { color: var(--ink); }
+.status-steps li.complete .step-marker { border-color: var(--green); background: var(--green); color: #fff; }
+.status-steps li.current { color: var(--ink); font-weight: 800; }
+.status-steps li.current .step-marker { border-color: var(--green); color: var(--green); background: #fff; box-shadow: 0 0 0 3px rgba(33,134,75,.15); }
+.notice { padding: 12px 16px; border-radius: 10px; background: var(--pink-tint); color: var(--ink-soft); }
+footer { padding: 24px; background: var(--pink); text-align: center; font-size: 13px; }
+@media (max-width: 600px) {
+  .wrap { padding: 0 16px; }
+  .top { grid-template-columns: 1fr auto; padding: 12px 0; }
+  .top nav { grid-column: 1 / -1; grid-row: 2; justify-content: flex-start; gap: 18px; }
+  .header-actions { grid-column: 2; grid-row: 1; }
+  .cart-row { grid-template-columns: 1fr auto; gap: 8px; }
+  .cart-row .quantity { grid-column: 1; }
+  .cart-row .remove { grid-column: 2; grid-row: 2; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap top">
+    <a href="Home.html" class="brand-link" aria-label="Pet Guardian home">
+      <img class="brand-logo" src="Brand_image/website_logo.jpeg" alt="Pet Guardian">
+    </a>
+    <nav aria-label="Cart navigation">
+      <a href="Home.html">Continue shopping</a>
+      <a href="Cart.html#tracking">Track orders</a>
+    </nav>
+    <div class="header-actions">
+      <a class="cart" href="Cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
+      <a class="history" href="OrderHistory.html" aria-label="Past order history" title="Past order history">🧾</a>
+      <a class="avatar" href="Profile.html" aria-label="Profile">👤</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="cart-view">
+    <h1>Your cart</h1>
+    <p class="intro">Review your items and choose delivery or store collection.</p>
+    <p class="notice" id="products-loading" role="status">Loading products...</p>
+    <p class="notice" id="products-error" role="alert" hidden>Products could not be loaded. Please try again later.</p>
+    <p class="notice" id="empty-cart" hidden>Your cart is empty. <a href="Home.html">Browse products</a> to add something for your pet.</p>
+    <section class="panel" aria-label="Cart items">
+      <div id="cart-items"></div>
+      <div class="summary" id="cart-summary" hidden>
+        <div><span>Subtotal</span><b id="subtotal">$0.00</b></div>
+        <div><span>Shipping</span><b id="shipping">$0.00</b></div>
+        <div class="grand"><span>Total</span><b id="total">$0.00</b></div>
+      </div>
+    </section>
+
+    <form id="checkout-form" hidden>
+      <section class="panel">
+        <h2>How would you like to receive your order?</h2>
+        <div class="fields">
+          <div class="choice">
+            <label><input type="radio" name="fulfillment" value="delivery" required> <span>Delivery<br><span class="muted">Flat shipping fee: $3.00</span></span></label>
+          </div>
+          <div class="choice">
+            <label><input type="radio" name="fulfillment" value="collection" required> <span>Collect at a store<br><span class="muted">No additional charge</span></span></label>
+          </div>
+        </div>
+        <div class="fields" id="delivery-fields" hidden>
+          <label>Full name<input name="customerName" autocomplete="name"></label>
+          <label>Delivery address<input name="address" autocomplete="street-address"></label>
+          <label>Contact number<input name="phone" type="tel" autocomplete="tel"></label>
+        </div>
+        <div class="fields" id="collection-fields" hidden>
+          <label>Choose a collection store<select name="store"></select></label>
+          <label>Full name<input name="collectionName" autocomplete="name"></label>
+          <label>Contact number<input name="collectionPhone" type="tel" autocomplete="tel"></label>
+        </div>
+      </section>
+      <button type="submit" class="cta" id="review-order" disabled>Review order</button>
+    </form>
+  </section>
+
+  <section id="review-view" hidden>
+    <h1>Confirm your order</h1>
+    <p class="intro">Check the details below before confirming. This is a demo checkout; no payment will be taken.</p>
+    <div class="panel" id="review-details"></div>
+    <div class="actions">
+      <button type="button" class="cta secondary" id="edit-order">Back to cart</button>
+      <button type="button" class="cta" id="confirm-order">Confirm order</button>
+    </div>
+  </section>
+
+  <section id="confirmed-view" hidden>
+    <div class="panel">
+      <h1>Order confirmed</h1>
+      <p id="confirmation-message" class="intro"></p>
+      <p class="notice">This order is a demo. It has not been sent to a store and no payment or delivery has been processed.</p>
+      <div class="actions">
+        <a class="cta" href="Cart.html#tracking">Track your order</a>
+        <a class="cta secondary" href="Home.html">Continue shopping</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="tracking-view" hidden>
+    <h1>Track your orders</h1>
+    <p class="intro">Demo order statuses can be advanced here for preview.</p>
+    <div id="orders-list"></div>
+  </section>
+</main>
+
+<footer>Pet Guardian demo shop</footer>
+<script src="shop-data.js"></script>
+<script src="api.js"></script>
+<script src="products-api.js"></script>
+<script>
+const CART_KEY = "petGuardianCart";
+const ORDERS_KEY = "petGuardianOrders";
+const DELIVERY_FEE = 3;
+const money = amount => "$" + amount.toFixed(2);
+window.PET_PRODUCTS = [];
+
+function readCart() {
+  const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+  return Array.isArray(cart) ? cart : [];
+}
+
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  renderCart();
+}
+
+function getCartLines() {
+  const cart = readCart();
+  return cart.map(item => {
+    const product = window.PET_PRODUCTS.find(entry => entry.id === item.productId);
+    return product ? { ...product, quantity: item.quantity } : null;
+  }).filter(Boolean);
+}
+
+function updateCartCount() {
+  const count = readCart().reduce((sum, item) => sum + item.quantity, 0);
+  document.querySelectorAll(".cart-count").forEach(element => {
+    element.textContent = count;
+  });
+}
+
+function renderCart() {
+  const lines = getCartLines();
+  const items = document.getElementById("cart-items");
+  items.replaceChildren();
+  document.getElementById("empty-cart").hidden = lines.length > 0;
+  document.getElementById("checkout-form").hidden = lines.length === 0;
+  document.getElementById("cart-summary").hidden = lines.length === 0;
+  document.getElementById("review-order").disabled = lines.length === 0;
+
+  lines.forEach(product => {
+    const row = document.createElement("article");
+    row.className = "cart-row";
+    row.dataset.productId = product.id;
+
+    const details = document.createElement("div");
+    const name = document.createElement("div");
+    name.className = "product-name";
+    name.textContent = product.name;
+    const price = document.createElement("div");
+    price.className = "muted";
+    price.textContent = `${money(product.price)} each`;
+    details.append(name, price);
+
+    const quantity = document.createElement("div");
+    quantity.className = "quantity";
+    const decrease = document.createElement("button");
+    decrease.type = "button";
+    decrease.dataset.action = "decrease";
+    decrease.setAttribute("aria-label", `Decrease ${product.name} quantity`);
+    decrease.textContent = "−";
+    const count = document.createElement("span");
+    count.textContent = product.quantity;
+    const increase = document.createElement("button");
+    increase.type = "button";
+    increase.dataset.action = "increase";
+    increase.setAttribute("aria-label", `Increase ${product.name} quantity`);
+    increase.textContent = "+";
+    quantity.append(decrease, count, increase);
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "remove";
+    remove.dataset.action = "remove";
+    remove.textContent = "Remove";
+    row.append(details, quantity, remove);
+    items.append(row);
+  });
+
+  const subtotal = lines.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const fulfillment = document.querySelector('[name="fulfillment"]:checked')?.value;
+  const shipping = fulfillment === "delivery" && lines.length ? DELIVERY_FEE : 0;
+  document.getElementById("subtotal").textContent = money(subtotal);
+  document.getElementById("shipping").textContent = shipping ? money(shipping) : "Free";
+  document.getElementById("total").textContent = money(subtotal + shipping);
+  updateCartCount();
+}
+
+document.getElementById("cart-items").addEventListener("click", event => {
+  const button = event.target.closest("[data-action]");
+  if (!button) return;
+
+  const productId = button.closest(".cart-row").dataset.productId;
+  const cart = readCart();
+  const item = cart.find(entry => entry.productId === productId);
+  if (!item) return;
+
+  if (button.dataset.action === "increase") item.quantity += 1;
+  if (button.dataset.action === "decrease") item.quantity -= 1;
+  if (button.dataset.action === "remove" || item.quantity <= 0) {
+    saveCart(cart.filter(entry => entry.productId !== productId));
+    return;
+  }
+
+  saveCart(cart);
+});
+
+const checkoutForm = document.getElementById("checkout-form");
+const storeSelect = checkoutForm.elements.store;
+window.PET_STORES.forEach(store => {
+  const option = document.createElement("option");
+  option.value = store.id;
+  option.textContent = store.name;
+  storeSelect.append(option);
+});
+
+function updateFulfillmentFields() {
+  const fulfillment = checkoutForm.elements.fulfillment.value;
+  const delivery = fulfillment === "delivery";
+  const collection = fulfillment === "collection";
+  document.getElementById("delivery-fields").hidden = !delivery;
+  document.getElementById("collection-fields").hidden = !collection;
+  checkoutForm.elements.customerName.required = delivery;
+  checkoutForm.elements.address.required = delivery;
+  checkoutForm.elements.phone.required = delivery;
+  storeSelect.required = collection;
+  checkoutForm.elements.collectionName.required = collection;
+  checkoutForm.elements.collectionPhone.required = collection;
+  renderCart();
+}
+
+checkoutForm.addEventListener("change", updateFulfillmentFields);
+
+function getOrders() {
+  const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || "[]");
+  return Array.isArray(orders) ? orders : [];
+}
+
+function getCheckoutData() {
+  const data = new FormData(checkoutForm);
+  const fulfillment = data.get("fulfillment");
+  const store = window.PET_STORES.find(entry => entry.id === data.get("store"));
+  return {
+    fulfillment,
+    destination: fulfillment === "delivery"
+      ? data.get("address")
+      : store.name,
+    customerName: data.get(fulfillment === "delivery" ? "customerName" : "collectionName"),
+    phone: data.get(fulfillment === "delivery" ? "phone" : "collectionPhone"),
+    items: getCartLines().map(item => ({
+      productId: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity
+    })),
+    subtotal: getCartLines().reduce((sum, item) => sum + item.price * item.quantity, 0),
+    shipping: fulfillment === "delivery" ? DELIVERY_FEE : 0
+  };
+}
+
+function renderReview() {
+  const order = getCheckoutData();
+  const panel = document.getElementById("review-details");
+  panel.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Order summary";
+  const destination = document.createElement("p");
+  destination.textContent = `${order.fulfillment === "delivery" ? "Delivery to" : "Collection at"}: ${order.destination}`;
+  const itemList = document.createElement("ul");
+  order.items.forEach(item => {
+    const line = document.createElement("li");
+    line.textContent = `${item.name} × ${item.quantity} — ${money(item.price * item.quantity)}`;
+    itemList.append(line);
+  });
+  const total = document.createElement("p");
+  total.className = "summary grand";
+  total.textContent = `Subtotal ${money(order.subtotal)} + shipping ${order.shipping ? money(order.shipping) : "Free"} = ${money(order.subtotal + order.shipping)}`;
+  panel.append(heading, destination, itemList, total);
+}
+
+checkoutForm.addEventListener("submit", event => {
+  event.preventDefault();
+  if (!checkoutForm.reportValidity()) return;
+  renderReview();
+  location.hash = "review";
+});
+
+document.getElementById("edit-order").addEventListener("click", () => {
+  location.hash = "cart";
+});
+
+document.getElementById("confirm-order").addEventListener("click", () => {
+  const confirmButton = document.getElementById("confirm-order");
+  if (confirmButton.disabled) return;
+  confirmButton.disabled = true;
+
+  const order = getCheckoutData();
+  order.id = `PG-${Date.now().toString(36).toUpperCase()}`;
+  order.createdAt = new Date().toISOString();
+  order.statusIndex = 0;
+  const orders = getOrders();
+  orders.unshift(order);
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  localStorage.setItem(CART_KEY, "[]");
+  updateCartCount();
+  document.getElementById("confirmation-message").textContent =
+    `Your demo order ${order.id} has been confirmed. You can follow its simulated status on the tracking page.`;
+  location.hash = "confirmed";
+});
+
+function appendTextLine(parent, label, value) {
+  const line = document.createElement("p");
+  line.textContent = `${label}: ${value}`;
+  parent.append(line);
+}
+
+function renderOrders() {
+  const container = document.getElementById("orders-list");
+  container.replaceChildren();
+  const orders = getOrders();
+  if (!orders.length) {
+    const empty = document.createElement("p");
+    empty.className = "notice";
+    empty.textContent = "No orders yet. Confirm an order to see it here.";
+    container.append(empty);
+    return;
+  }
+
+  orders.forEach(order => {
+    const steps = order.fulfillment === "delivery"
+      ? ["Pending", "Processing", "Out for delivery", "Delivered"]
+      : ["Pending", "Preparing order", "Ready for collection", "Collected"];
+    const card = document.createElement("article");
+    card.className = "order-card";
+    const heading = document.createElement("h2");
+    heading.textContent = `Order ${order.id}`;
+    const status = document.createElement("span");
+    status.className = "status";
+    status.textContent = `Status: ${steps[order.statusIndex]}`;
+    const progress = document.createElement("ol");
+    progress.className = "status-steps";
+    steps.forEach((step, index) => {
+      const item = document.createElement("li");
+      const marker = document.createElement("span");
+      marker.className = "step-marker";
+      marker.textContent = index < order.statusIndex ? "✓" : String(index + 1);
+      const label = document.createElement("span");
+      label.textContent = step;
+      if (index < order.statusIndex) item.classList.add("complete");
+      if (index === order.statusIndex) {
+        item.classList.add("current");
+        item.setAttribute("aria-current", "step");
+      }
+      item.append(marker, label);
+      progress.append(item);
+    });
+    card.append(heading, status, progress);
+    appendTextLine(card, order.fulfillment === "delivery" ? "Delivery address" : "Collection store", order.destination);
+    appendTextLine(card, "Order total", money(order.subtotal + order.shipping));
+    order.items.forEach(item => appendTextLine(card, item.name, `× ${item.quantity}`));
+
+    if (order.statusIndex < steps.length - 1) {
+      const advance = document.createElement("button");
+      advance.type = "button";
+      advance.className = "cta secondary";
+      advance.dataset.advanceOrder = order.id;
+      advance.textContent = "Advance demo status";
+      card.append(advance);
+    }
+    container.append(card);
+  });
+}
+
+document.getElementById("orders-list").addEventListener("click", event => {
+  const button = event.target.closest("[data-advance-order]");
+  if (!button) return;
+  const orders = getOrders();
+  const order = orders.find(entry => entry.id === button.dataset.advanceOrder);
+  if (!order) return;
+  order.statusIndex += 1;
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  renderOrders();
+});
+
+function routePage() {
+  const page = location.hash.slice(1);
+  if (page === "review" && !checkoutForm.elements.fulfillment.value) {
+    location.hash = "cart";
+    return;
+  }
+  document.getElementById("cart-view").hidden = page !== "" && page !== "cart";
+  document.getElementById("review-view").hidden = page !== "review";
+  document.getElementById("confirmed-view").hidden = page !== "confirmed";
+  document.getElementById("tracking-view").hidden = page !== "tracking";
+  if (page === "review") renderReview();
+  if (page === "tracking") renderOrders();
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", routePage);
+document.querySelectorAll('a[href="Cart.html#tracking"]').forEach(link => {
+  link.addEventListener("click", () => {
+    if (location.pathname.endsWith("Cart.html") && location.hash === "#tracking") {
+      renderOrders();
+    }
+  });
+});
+
+routePage();
+window.PET_PRODUCTS_API.loadProducts().then(products => {
+  window.PET_PRODUCTS = products;
+  document.getElementById("products-loading").hidden = true;
+  renderCart();
+  routePage();
+}).catch(error => {
+  console.error("Could not load products:", error);
+  document.getElementById("products-loading").hidden = true;
+  document.getElementById("products-error").hidden = false;
+});
+</script>
+</body>
+</html>

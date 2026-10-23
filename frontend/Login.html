@@ -1,0 +1,643 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in</title>
+<style>
+  :root {
+    --cream: #FFF8F5;   /* 60% base */
+    --pink: #FFC5D3;    /* 30% structure */
+    --peach: #FFCBA5;   /* 10% accent */
+    --peach-deep: #FFB58A;
+    --ink: #3A2E2B;     /* text */
+    --ink-soft: rgba(58, 46, 43, .68);
+    --line: rgba(58, 46, 43, .35);
+    --error: #A3262A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Nunito", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--cream);
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Paw decorations */
+  .paw { position: fixed; z-index: 0; pointer-events: none; }
+  .paw.tl { width: 340px; color: var(--pink); top: -90px; left: -90px; transform: rotate(-24deg); }
+  .paw.bl { width: 130px; color: var(--peach); bottom: -20px; left: 7%; transform: rotate(18deg); }
+  .paw.br1 { width: 74px; color: var(--pink); bottom: 70px; right: 5%; transform: rotate(32deg); }
+  .paw.br2 { width: 56px; color: var(--peach); bottom: 24px; right: 13%; transform: rotate(12deg); }
+  .paw.tr { width: 60px; color: var(--peach); top: 40px; right: 7%; transform: rotate(-20deg); }
+
+  /* Card */
+  .card {
+    position: relative; z-index: 1;
+    width: min(960px, 100%);
+    min-height: 540px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--cream);
+    border: 1px solid rgba(58, 46, 43, .12);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(58, 46, 43, .12);
+  }
+
+  /* Left: form */
+  .form-side {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 56px 48px 20px;
+  }
+  .logo {
+    width: 72px; height: 72px;
+    border: 2px dashed var(--ink-soft); border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--ink-soft); background: var(--pink);
+    margin-bottom: 10px;
+  }
+  .logo-img {
+  width: 72px; height: 72px;      /* same size as the placeholder */
+  object-fit: contain;            /* keeps the whole logo visible, no cropping */
+  margin-bottom: 10px;
+}
+  .logo svg { width: 30px; height: 30px; }
+  .brand { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -.2px; }
+  .subtitle { margin: 34px 0 22px; font-size: 14px; font-weight: 700; }
+
+  form { width: 100%; max-width: 320px; }
+  .field { margin-bottom: 14px; }
+  .field input {
+    width: 100%; height: 46px;
+    border: 1.5px solid var(--line); border-radius: 23px;
+    padding: 0 20px; font: inherit; font-size: 14px; color: var(--ink);
+    background: #fff; outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .field input::placeholder { color: rgba(58, 46, 43, .55); }
+  .field input:focus { border-color: var(--ink); box-shadow: 0 0 0 4px var(--pink); }
+  .field input[aria-invalid="true"] { border-color: var(--error); }
+  .error { display: none; margin: 6px 0 0 20px; font-size: 12px; color: var(--error); }
+  .field input[aria-invalid="true"] + .error { display: block; }
+
+  .row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 2px 4px 20px; font-size: 12px; color: var(--ink-soft);
+  }
+  .remember { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+  .remember input { accent-color: var(--ink); width: 15px; height: 15px; }
+  .row a { color: var(--ink); font-weight: 700; }
+  .row a:hover, .row a:focus-visible { text-decoration-thickness: 2px; }
+  .guest-link { margin-top: 16px; text-align: center; font-size: 13px; }
+  .guest-link a { color: var(--ink); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+  .btn {
+    width: 100%; height: 46px; border: 0; border-radius: 23px;
+    background: var(--peach); color: var(--ink);
+    font: inherit; font-size: 15px; font-weight: 800; cursor: pointer;
+    box-shadow: 0 4px 0 rgba(58, 46, 43, .18);
+    transition: background .15s, transform .05s, box-shadow .05s;
+  }
+  .btn:hover { background: var(--peach-deep); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(58, 46, 43, .18); }
+  .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+  .legal {
+    margin-top: auto; padding-top: 28px; align-self: flex-end;
+    font-size: 11px; display: flex; gap: 14px;
+  }
+  .legal a { color: var(--ink-soft); }
+  .legal a:hover { color: var(--ink); }
+
+  /* Login illustration */
+  .image-side {
+    background: var(--pink);
+    display: grid; place-items: center;
+    padding: 28px;
+    position: relative;
+  }
+  .img-placeholder {
+    width: 100%; height: 100%; min-height: 300px;
+    border: 2px dashed var(--ink-soft); border-radius: 14px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    color: var(--ink); font-size: 14px; font-weight: 600; text-align: center;
+    background: rgba(255, 248, 245, .45);
+  }
+  .img-placeholder svg { width: 56px; height: 56px; }
+  .hero { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; }
+
+  @media (max-width: 760px) {
+    .card { grid-template-columns: 1fr; min-height: 0; }
+    .image-side { display: none; }
+    .form-side { padding: 40px 24px 20px; }
+    .paw.tl { width: 220px; top: -60px; left: -60px; }
+    .paw.br1, .paw.br2, .paw.tr { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+
+  [hidden] { display: none !important; }
+  .alert { margin-bottom: 14px; padding: 10px 16px; border: 1.5px solid var(--error); border-radius: 14px; background: #fff; color: var(--error); font-size: 13px; font-weight: 700; line-height: 1.4; }
+  .field input:disabled, .btn:disabled { opacity: .55; cursor: not-allowed; }
+  .btn:disabled:hover { background: var(--peach); }
+  .btn:disabled:active { transform: none; box-shadow: 0 4px 0 rgba(58, 46, 43, .18); }
+  a.btn { display: grid; place-items: center; text-decoration: none; }
+
+  /* Forgot-password view */
+  .card.single { grid-template-columns: 1fr; width: min(460px, 100%); min-height: 0; }
+  .x { position: absolute; top: 14px; right: 14px; width: 40px; height: 40px; border-radius: 50%; background: var(--pink); color: var(--ink); display: grid; place-items: center; }
+  .x:hover { background: var(--peach); }
+  .single-body { padding: 64px 40px 44px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .single-title { font-size: 22px; font-weight: 800; }
+  .hint { margin: 8px 0 26px; font-size: 14px; color: var(--ink-soft); }
+  .single-body .btn { max-width: 320px; }
+  .tick { width: 72px; height: 72px; border-radius: 50%; background: var(--peach); display: grid; place-items: center; margin-bottom: 18px; }
+
+  /* Terms / Privacy dialogs */
+  dialog { border: 2px solid var(--ink); border-radius: 16px; background: var(--cream); color: var(--ink); width: min(720px, calc(100% - 32px)); max-height: 85vh; padding: 0; margin: auto; overflow: hidden; }
+  dialog[open] { display: flex; flex-direction: column; }
+  dialog::backdrop { background: rgba(58, 46, 43, .55); }
+  .dlg-head { display: flex; justify-content: space-between; align-items: center; background: var(--pink); padding: 14px 20px; }
+  .dlg-head h2 { font-size: 18px; font-weight: 800; }
+  .dlg-close { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--cream); font-size: 22px; line-height: 1; cursor: pointer; color: var(--ink); }
+  .dlg-close:hover { background: var(--peach); }
+  .dlg-body { overflow-y: auto; padding: 8px 26px 28px; font-size: 14px; line-height: 1.65; }
+  .dlg-body h3 { font-size: 15px; margin: 22px 0 6px; }
+  .dlg-body p { margin-bottom: 10px; }
+  .dlg-body ul { margin: 0 0 10px 22px; }
+  .dlg-body li { margin-bottom: 4px; }
+
+  /* Demo credentials note */
+  .demo-note {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 56px);
+    background: rgba(255, 248, 245, 0.92);
+    border: 1.5px dashed var(--ink-soft);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 12px;
+    text-align: left;
+    backdrop-filter: blur(4px);
+  }
+  .demo-label {
+    font-weight: 800;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+  }
+  .demo-note p { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
+  .demo-key { color: var(--ink-soft); font-weight: 600; }
+  .demo-val { font-weight: 800; font-family: "Courier New", monospace; color: var(--ink); }
+</style>
+</head>
+<body>
+  <!-- Reusable paw shape -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="paw" viewBox="0 0 100 100">
+      <path fill="currentColor" d="M50 44c-14 0-30 16-30 30 0 9 7 14 15 14 6 0 10-3 15-3s9 3 15 3c8 0 15-5 15-14 0-14-16-30-30-30z"/>
+      <ellipse fill="currentColor" cx="17" cy="42" rx="10" ry="14" transform="rotate(-22 17 42)"/>
+      <ellipse fill="currentColor" cx="37" cy="21" rx="10" ry="14" transform="rotate(-8 37 21)"/>
+      <ellipse fill="currentColor" cx="63" cy="21" rx="10" ry="14" transform="rotate(8 63 21)"/>
+      <ellipse fill="currentColor" cx="83" cy="42" rx="10" ry="14" transform="rotate(22 83 42)"/>
+    </symbol>
+  </svg>
+
+  <svg class="paw tl" viewBox="0 0 100 100" aria-hidden="true"><use href="#paw"/></svg>
+  <svg class="paw bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#paw"/></svg>
+  <svg class="paw br1" viewBox="0 0 100 100" aria-hidden="true"><use href="#paw"/></svg>
+  <svg class="paw br2" viewBox="0 0 100 100" aria-hidden="true"><use href="#paw"/></svg>
+  <svg class="paw tr" viewBox="0 0 100 100" aria-hidden="true"><use href="#paw"/></svg>
+
+  <! login form view and website logo placeholder -->
+  <main class="card" id="view-login">
+  <section class="form-side">
+    <img class="logo-img" src="Brand_image/website_logo.jpeg" alt="Pet Guardian logo">
+    <div class="brand">Pet Guardian</div>
+
+    <h1 class="subtitle">Sign in to continue</h1>
+
+
+      <form id="login-form" autocomplete="on" novalidate>
+        <p class="alert" id="login-alert" role="alert" hidden></p>
+        <div class="field">
+          <input type="text" id="customer-id" name="customer_id" placeholder="Customer ID" autocomplete="username" aria-label="Customer ID" required>
+          <p class="error">Enter your customer ID.</p>
+        </div>
+        <div class="field">
+          <input type="password" id="password" name="password" placeholder="Password" autocomplete="current-password" aria-label="Password" required>
+          <p class="error">Enter your password.</p>
+        </div>
+
+        <div class="row">
+          <label class="remember"><input type="checkbox" name="remember"> Remember me</label>
+          <a href="#forgot">Forgot password?</a>
+        </div>
+
+        <button class="btn" type="submit">Log in</button>
+        <p class="guest-link"><a href="Home.html?guest=1">Browse as guest</a></p>
+      </form>
+
+      <nav class="legal" aria-label="Legal">
+        <a href="#terms">Terms &amp; Conditions</a>
+        <a href="#privacy">Privacy Policy</a>
+      </nav>
+    </section>
+
+    <aside class="image-side" aria-hidden="true">
+      <img class="hero" src="Brand_image/login-hero-cat.png" alt="">
+      <div class="demo-note">
+        <p class="demo-label">&#128273; Demo Access</p>
+        <p><span class="demo-key">Username</span><span class="demo-val">CUST001</span></p>
+        <p><span class="demo-key">Password</span><span class="demo-val">ADMIN123</span></p>
+      </div>
+    </aside>
+  </main>
+
+  <main class="card single" id="view-forgot" hidden aria-labelledby="forgot-title">
+    <a class="x" href="#" aria-label="Close and go back to login">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </a>
+
+    <div class="single-body" id="reset-wrap">
+      <h1 class="single-title" id="forgot-title">Reset your password</h1>
+      <p class="hint">Password reset is not connected yet. Please contact support to change your password.</p>
+      <a class="btn" id="back-login" href="#">Back to login</a>
+    </div>
+  </main>
+<!--- Terms & Privacy dialogs -->
+  <dialog id="dlg-terms" aria-labelledby="terms-title">
+    <div class="dlg-head"><h2 id="terms-title">Terms &amp; Conditions</h2><button class="dlg-close" data-close aria-label="Close">&times;</button></div>
+    <div class="dlg-body">
+<p><strong>Last Updated:</strong> 18/10/2026</p>
+<h3>1. Introduction</h3>
+<p>Welcome to [Pet Shop Name] ("we", "our", or "us"). These Terms and Conditions govern your access to and use of our website, including the purchase of pet food, pet supplies, toys, accessories, and other products offered through our online store.</p>
+<p>By accessing our website or placing an order, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use our website.</p>
+<h3>2. Eligibility and Account Registration</h3>
+<p>You must provide accurate and complete information when creating an account or placing an order. You are responsible for maintaining the confidentiality of your account credentials and for activities conducted through your account.</p>
+<p>We reserve the right to suspend or terminate accounts that contain inaccurate information, violate these terms, or are used for fraudulent activities, subject to applicable law.</p>
+<h3>3. Products and Availability</h3>
+<p>We aim to ensure that product descriptions, images, prices, and availability are accurate. However, colours, packaging, sizes, or other product details may vary slightly from the images displayed on our website.</p>
+<p>All products are subject to availability. We reserve the right to discontinue products or limit quantities where reasonably necessary.</p>
+<p>Pet owners are responsible for checking product labels, ingredients, size recommendations, feeding instructions, and suitability for their pets before purchasing or using a product.</p>
+<h3>4. Pricing and Payment</h3>
+<p>All prices are displayed in [Currency] unless otherwise stated. Applicable taxes, delivery charges, and other fees will be displayed during checkout where required.</p>
+<p>We accept the payment methods listed on our website. Orders may be subject to verification before processing.</p>
+<p>If a pricing or listing error occurs, we will take reasonable steps to notify affected customers and resolve the issue in accordance with applicable law.</p>
+<h3>5. Orders and Order Acceptance</h3>
+<p>Placing an order constitutes an offer to purchase the selected products. An order confirmation email does not necessarily mean that the order has been finally accepted.</p>
+<p>We reserve the right to cancel or refuse an order where permitted by law, including in cases of suspected fraud, product unavailability, or material pricing errors. If payment has already been collected for a cancelled order, we will arrange an appropriate refund.</p>
+<h3>6. Shipping and Delivery</h3>
+<p>We deliver to the locations specified on our website. Estimated delivery dates are provided for guidance and are not guaranteed unless expressly stated.</p>
+<p>Delivery times may be affected by weather, courier delays, public holidays, or circumstances beyond our reasonable control.</p>
+<p>Customers are responsible for providing accurate delivery information. Additional charges or arrangements may apply if an order cannot be delivered because the supplied information is incorrect.</p>
+<h3>7. Returns, Exchanges and Refunds</h3>
+<p>Customers may request a return, exchange, or refund in accordance with our applicable return policy and consumer protection laws.</p>
+<p>For hygiene, safety, and product-quality reasons, certain items, such as opened pet food, consumables, or personalised products, may be ineligible for return unless they are defective, incorrectly supplied, or otherwise covered by applicable law.</p>
+<p>Please contact us at [Customer Service Email] with your order number and details of the issue.</p>
+<p>Nothing in this policy limits any consumer rights that cannot legally be excluded.</p>
+<h3>8. Product Safety and Pet Care</h3>
+<p>Our products are intended for their stated purposes. Customers should follow all product instructions, warnings, storage requirements, and feeding recommendations.</p>
+<p>If your pet has allergies, dietary restrictions, or special health needs, consult a qualified veterinarian when appropriate.</p>
+<p>Unless expressly stated, our products and website content do not constitute veterinary advice. We do not guarantee that a particular product will be suitable for every animal.</p>
+<h3>9. Promotions and Discounts</h3>
+<p>Promotional offers, discount codes, and loyalty rewards may be subject to additional terms, expiry dates, eligibility requirements, and usage limits.</p>
+<p>Unless stated otherwise, promotions cannot be exchanged for cash or combined with other offers. We will communicate any applicable restrictions when the offer is presented.</p>
+<h3>10. Intellectual Property</h3>
+<p>All content on this website, including text, images, graphics, logos, product descriptions, and website design, is owned by or licensed to [Pet Shop Name], unless otherwise indicated.</p>
+<p>You may not reproduce, distribute, modify, or commercially use our content without prior written permission, except where permitted by law.</p>
+<h3>11. Website Use and Prohibited Activities</h3>
+<p>You agree not to misuse our website, interfere with its operation, attempt unauthorised access, submit fraudulent orders, distribute malicious software, or use our content for unlawful purposes.</p>
+<p>We may restrict access or take other appropriate action where misuse is detected, subject to applicable law.</p>
+<h3>12. Limitation of Liability</h3>
+<p>To the extent permitted by applicable law, [Pet Shop Name] will not be liable for indirect or consequential losses arising from the use of our website or products.</p>
+<p>Nothing in these Terms and Conditions excludes or limits liability where such exclusion or limitation is prohibited by law, including applicable consumer protection rights.</p>
+<h3>13. Third-Party Services and Links</h3>
+<p>Our website may contain links to third-party websites or use external services for payments, delivery, analytics, or other functions.</p>
+<p>We are not responsible for the content or privacy practices of independent third-party websites. Your use of those services may be subject to their own terms and policies.</p>
+<h3>14. Changes to These Terms</h3>
+<p>We may update these Terms and Conditions from time to time. Updated terms will be published on this page with a revised "Last Updated" date.</p>
+<p>Changes will apply as permitted by applicable law. Where required, we will provide appropriate notice or obtain consent.</p>
+<h3>15. Governing Law</h3>
+<p>These Terms and Conditions are governed by the laws of [Country or Jurisdiction], subject to any mandatory consumer protection laws that apply to you.</p>
+<h3>16. Contact Us</h3>
+<p>If you have questions about these Terms and Conditions, please contact us:</p>
+<p><strong>Business Name:</strong> [Pet Shop Name]<br><strong>Email:</strong> [Customer Service Email]<br><strong>Business Address:</strong> [Business Address]<br><strong>Telephone:</strong> [Contact Number]</p>
+    </div>
+  </dialog>
+
+  <!--- Privacy Policy dialog -->
+  <dialog id="dlg-privacy" aria-labelledby="privacy-title">
+    <div class="dlg-head"><h2 id="privacy-title">Privacy Policy</h2><button class="dlg-close" data-close aria-label="Close">&times;</button></div>
+    <div class="dlg-body">
+<p><strong>Last Updated:</strong> 18/10/2026</p>
+<h3>1. Introduction</h3>
+<p>At [Pet Shop Name] ("we", "our", or "us"), we respect your privacy and are committed to protecting your personal information.</p>
+<p>This Privacy Policy explains how we collect, use, disclose, store, and protect personal information when you visit our website, create an account, purchase products, or contact us.</p>
+<p>By using our website, you acknowledge this Privacy Policy. Where consent is legally required, we will obtain it separately.</p>
+<h3>2. Information We Collect</h3>
+<p>Depending on how you use our website, we may collect the following categories of information:</p>
+<p><strong>Personal and Contact Information</strong></p>
+<ul>
+<li>Name</li>
+<li>Email address</li>
+<li>Telephone number</li>
+<li>Billing and delivery address</li>
+</ul>
+<p><strong>Account Information</strong></p>
+<ul>
+<li>Login credentials and account preferences</li>
+<li>Order history and saved shopping preferences</li>
+</ul>
+<p><strong>Transaction Information</strong></p>
+<ul>
+<li>Products purchased</li>
+<li>Order numbers, payment status, and refund records</li>
+<li>Relevant billing and transaction details</li>
+</ul>
+<p>Payment card information may be processed directly by our payment service provider. We do not store full payment card details unless expressly stated and appropriately secured.</p>
+<p><strong>Technical Information</strong></p>
+<ul>
+<li>IP address</li>
+<li>Browser type and device information</li>
+<li>Website usage and diagnostic data</li>
+<li>Cookies and similar technologies, where used</li>
+</ul>
+<p><strong>Customer Communications</strong></p>
+<ul>
+<li>Information you provide when contacting customer support, submitting feedback, or making enquiries</li>
+</ul>
+<p>We aim to collect only information that is reasonably necessary for the purposes described in this policy.</p>
+<h3>3. How We Use Your Information</h3>
+<p>We may use your personal information to:</p>
+<ul>
+<li>Process orders, payments, deliveries, returns, and refunds</li>
+<li>Create and manage customer accounts</li>
+<li>Respond to enquiries and provide customer support</li>
+<li>Send order confirmations and delivery updates</li>
+<li>Maintain website functionality, security, and performance</li>
+<li>Detect fraud and prevent unauthorised transactions</li>
+<li>Improve our products, services, and shopping experience</li>
+<li>Send promotional messages where permitted by law and, where required, with your consent</li>
+<li>Meet legal, regulatory, accounting, and record-keeping obligations</li>
+</ul>
+<h3>4. Cookies and Similar Technologies</h3>
+<p>Our website may use cookies and similar technologies to remember preferences, maintain shopping-cart functionality, understand website usage, and improve performance.</p>
+<p>Where required by law, we will obtain consent before using non-essential cookies or similar technologies.</p>
+<p>You can manage cookies through your browser settings and, where available, our website's cookie preference controls. Disabling certain cookies may affect website functionality.</p>
+<h3>5. Disclosure of Personal Information</h3>
+<p>We may share relevant personal information with trusted service providers where necessary to operate our business, including:</p>
+<ul>
+<li>Payment processors</li>
+<li>Delivery and logistics providers</li>
+<li>Website hosting and technical support providers</li>
+<li>Customer service platforms</li>
+<li>Analytics and marketing providers, where used</li>
+<li>Professional advisers, regulators, or public authorities where legally required</li>
+</ul>
+<p>We do not sell your personal information in exchange for money. Any additional sharing or processing will be conducted in accordance with applicable law and this policy.</p>
+<h3>6. Marketing Communications</h3>
+<p>If permitted by law, we may send you promotional emails, offers, product updates, or information about new arrivals.</p>
+<p>You may opt out of marketing emails by using the unsubscribe link in the message or contacting us at [Privacy Contact Email].</p>
+<p>Even if you opt out of marketing, we may still send essential communications relating to your orders, payments, account security, or other necessary service matters.</p>
+<h3>7. Data Retention</h3>
+<p>We retain personal information only for as long as reasonably necessary for the purposes described in this policy, including fulfilling orders, resolving disputes, maintaining records, and meeting legal obligations.</p>
+<p>Retention periods vary depending on the type of information and the applicable legal requirements. When information is no longer required, we will take appropriate steps to delete, anonymise, or securely dispose of it, where applicable.</p>
+<h3>8. Data Security</h3>
+<p>We implement reasonable technical and organisational safeguards to protect personal information against unauthorised access, disclosure, alteration, loss, or misuse.</p>
+<p>However, no method of electronic storage or internet transmission is completely secure. We cannot guarantee absolute security.</p>
+<h3>9. Your Privacy Rights</h3>
+<p>Depending on the laws that apply to you, you may have rights to:</p>
+<ul>
+<li>Request access to personal information we hold about you</li>
+<li>Request correction of inaccurate information</li>
+<li>Request deletion of certain information</li>
+<li>Withdraw consent where processing is based on consent</li>
+<li>Object to or restrict certain processing activities</li>
+<li>Opt out of marketing communications</li>
+<li>Lodge a complaint with the relevant privacy regulator</li>
+</ul>
+<p>To exercise an applicable right, contact us at [Privacy Contact Email]. We may need to verify your identity before processing your request.</p>
+<h3>10. Third-Party Websites and Services</h3>
+<p>Our website may link to third-party services, including payment providers and social media platforms.</p>
+<p>Those third parties may collect or process information under their own privacy policies. We encourage you to review their policies before providing personal information directly to them.</p>
+<h3>11. Children's Privacy</h3>
+<p>Our website is not intended to collect personal information from children in violation of applicable law.</p>
+<p>Where consent or parental authorisation is legally required, we will take appropriate steps to comply with those requirements.</p>
+<h3>12. International Data Transfers</h3>
+<p>Some of our service providers may process or store personal information outside your country of residence.</p>
+<p>Where international transfers occur, we will take steps required by applicable law to ensure that appropriate safeguards are in place.</p>
+<h3>13. Changes to This Privacy Policy</h3>
+<p>We may update this Privacy Policy from time to time to reflect changes in our practices, services, or legal obligations.</p>
+<p>The updated version will be published on this page with a revised "Last Updated" date. Where required, we will provide notice or seek consent for material changes.</p>
+<h3>14. Contact Us</h3>
+<p>For questions about this Privacy Policy or how we handle personal information, please contact:</p>
+<p><strong>Business Name:</strong> [Pet Shop Name]<br><strong>Privacy Contact Email:</strong> [Privacy Email Address]<br><strong>Business Address:</strong> [Business Address]<br><strong>Telephone:</strong> [Contact Number]</p>
+    </div>
+  </dialog>
+
+<script src="api.js"></script>
+<script>
+  const MAX_ATTEMPTS = 3;           // wrong attempts allowed before the lockout starts
+  const COOLDOWN_MS = 60 * 1000;    // 1 minute
+
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set(k, v) {
+      try {
+        localStorage.setItem(k, v);
+      } catch (error) {
+        console.error(`Could not save browser setting "${k}":`, error);
+      }
+    },
+    del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+
+  const AUTH_KEY = 'petGuardianSignedIn';
+  const CUSTOMER_ID_KEY = 'petGuardianCustomerId';
+  const REMEMBERED_CREDENTIALS_KEY = 'petGuardianRememberedCredentials';
+
+  const $ = id => document.getElementById(id);
+  const form = $('login-form'), customerId = $('customer-id'), password = $('password');
+  const rememberCustomerId = form.elements.remember;
+  const alertBox = $('login-alert'), loginBtn = form.querySelector('.btn');
+
+  try {
+    const rememberedCredentials = JSON.parse(store.get(REMEMBERED_CREDENTIALS_KEY) || 'null');
+    if (rememberedCredentials && typeof rememberedCredentials.customerId === 'string' &&
+        typeof rememberedCredentials.password === 'string') {
+      customerId.value = rememberedCredentials.customerId;
+      password.value = rememberedCredentials.password;
+      rememberCustomerId.checked = true;
+    }
+  } catch (error) {
+    console.error('Could not read remembered login details:', error);
+  }
+  rememberCustomerId.addEventListener('change', () => {
+    if (!rememberCustomerId.checked) store.del(REMEMBERED_CREDENTIALS_KEY);
+  });
+
+  /* ---------- Login + lockout ---------- */
+  let fails = parseInt(store.get('fails')) || 0;
+  let lockUntil = parseInt(store.get('lockUntil')) || 0;
+  let timer = null;
+
+  function showAlert(msg, announce) {
+    alertBox.setAttribute('aria-live', announce ? 'assertive' : 'off');
+    alertBox.textContent = msg;
+    alertBox.hidden = false;
+  }
+  function describeLoginError(error) {
+    const redact = value => {
+      if (Array.isArray(value)) return value.map(redact);
+      if (value && typeof value === 'object') {
+        return Object.fromEntries(Object.entries(value).map(([key, entry]) => [
+          key,
+          /password|token|secret|credential|authorization|api.?key|hash/i.test(key)
+            ? '[redacted]'
+            : redact(entry)
+        ]));
+      }
+      if (typeof value === 'string') {
+        return value
+          .replace(/Bearer\s+\S+/gi, 'Bearer [redacted]')
+          .replace(/((?:password|token|secret|api.?key)\s*[:=]\s*)[^,\s;]+/gi, '$1[redacted]')
+          .slice(0, 500);
+      }
+      return value;
+    };
+
+    const status = error.status ? `HTTP ${error.status}` : 'Request failed';
+    if (error.response !== undefined) {
+      let response;
+      try {
+        response = JSON.stringify(redact(error.response));
+      } catch {
+        response = '[response could not be displayed]';
+      }
+      return `${status}. API response: ${response || 'empty response'}`;
+    }
+    return `${status}: ${error.message || 'No response was received.'}`;
+  }
+  function setDisabled(d) { [customerId, password, loginBtn].forEach(el => el.disabled = d); }
+
+  function tick(announce) {
+    const s = Math.ceil((lockUntil - Date.now()) / 1000);
+    if (s <= 0) { unlock(); return; }
+    const t = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    showAlert('Customer ID or password is incorrect. Too many failed attempts, please try again in ' + t + '.', announce);
+  }
+  function startLock() {
+    setDisabled(true);
+    tick(true);
+    clearInterval(timer);
+    timer = setInterval(() => tick(false), 1000);
+  }
+  function lock() {
+    lockUntil = Date.now() + COOLDOWN_MS;
+    store.set('lockUntil', lockUntil);
+    startLock();
+  }
+  function unlock() {
+    clearInterval(timer);
+    lockUntil = 0; fails = 0;
+    store.del('lockUntil'); store.del('fails');
+    setDisabled(false);
+    alertBox.hidden = true;
+    customerId.focus();
+  }
+  if (lockUntil > Date.now()) startLock(); else if (lockUntil) unlock();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (Date.now() < lockUntil) return;
+    const customerIdOk = customerId.value.trim().length > 0;
+    const passOk = password.value.length > 0;
+    customerId.setAttribute('aria-invalid', String(!customerIdOk));
+    password.setAttribute('aria-invalid', String(!passOk));
+    if (!customerIdOk || !passOk) return;
+
+    setDisabled(true);
+    alertBox.hidden = true;
+    try {
+      const authenticated = await window.PET_API.login(customerId.value.trim(), password.value);
+      console.info('Login API returned:', authenticated);
+      if (!authenticated) {
+        setDisabled(false);
+        fails++;
+        store.set('fails', fails);
+        if (fails >= MAX_ATTEMPTS) { lock(); return; }
+        const left = MAX_ATTEMPTS - fails;
+        showAlert('Login API returned false. Customer ID or password is incorrect. ' + left + ' attempt' + (left > 1 ? 's' : '') + ' left.', true);
+        password.value = '';
+        password.focus();
+        return;
+      }
+
+      fails = 0;
+      lockUntil = 0;
+      clearInterval(timer);
+      store.del('fails');
+      store.del('lockUntil');
+      store.set(AUTH_KEY, 'true');
+      store.set(CUSTOMER_ID_KEY, customerId.value.trim());
+      if (rememberCustomerId.checked) {
+        store.set(REMEMBERED_CREDENTIALS_KEY, JSON.stringify({
+          customerId: customerId.value.trim(),
+          password: password.value
+        }));
+      } else {
+        store.del(REMEMBERED_CREDENTIALS_KEY);
+      }
+      window.location.href = 'Home.html';
+    } catch (error) {
+      console.error('Could not sign in:', error);
+      setDisabled(false);
+      showAlert('Sign in could not be completed. ' + describeLoginError(error), true);
+    }
+  });
+
+  /* ---------- Views + dialogs (hash routing) ---------- */
+  const dialogs = { terms: $('dlg-terms'), privacy: $('dlg-privacy') };
+
+  function route() {
+    const h = location.hash.slice(1);
+    const isForgot = h === 'forgot';
+    $('view-login').hidden = isForgot;
+    $('view-forgot').hidden = !isForgot;
+    if (isForgot) {
+      $('back-login').focus();
+    }
+    for (const k in dialogs) {
+      const d = dialogs[k];
+      if (h === k && !d.open) d.showModal();
+      if (h !== k && d.open) d.close();
+    }
+  }
+  for (const k in dialogs) {
+    const d = dialogs[k];
+    d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
+    d.addEventListener('close', () => {
+      if (location.hash.slice(1) === k) {
+        history.replaceState(null, '', location.pathname + location.search);
+        route();
+      }
+    });
+  }
+  window.addEventListener('hashchange', route);
+  route();
+</script>
+</body>
+</html>
