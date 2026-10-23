@@ -1,3 +1,56 @@
 {
-  "cleanUrls": true
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/auth/login",
+      "destination": "https://5-musketeers-production.up.railway.app/api/auth/login"
+    },
+    {
+      "source": "/api/customers",
+      "destination": "https://5-musketeers-production.up.railway.app/api/customers"
+    },
+    {
+      "source": "/api/orders",
+      "destination": "https://5-musketeers-production.up.railway.app/api/orders"
+    },
+    {
+      "source": "/api/orders/:path*",
+      "destination": "https://5-musketeers-production.up.railway.app/api/orders/:path*"
+    },
+    {
+      "source": "/api/promotions",
+      "destination": "https://5-musketeers-production.up.railway.app/api/promotions"
+    },
+    {
+      "source": "/api/shops",
+      "destination": "https://5-musketeers-production.up.railway.app/api/shops"
+    },
+    {
+      "source": "/api/products",
+      "destination": "https://5-musketeers-production.up.railway.app/api/products"
+    },
+    {
+      "source": "/api/categories",
+      "destination": "https://5-musketeers-production.up.railway.app/api/categories"
+    },
+    {
+      "source": "/api/brands",
+      "destination": "https://5-musketeers-production.up.railway.app/api/brands"
+    },
+    {
+      "source": "/api/pet_types",
+      "destination": "https://5-musketeers-production.up.railway.app/api/pet_types"
+    },
+    {
+      "source": "/api/reviews",
+      "destination": "https://5-musketeers-production.up.railway.app/api/reviews"
+    },
+    {
+      "source": "/products/:path*",
+      "destination": "https://5-musketeers-production.up.railway.app/products/:path*"
+    }
+  ]
 }

@@ -32,8 +32,9 @@ header { background: var(--pink); box-shadow: 0 2px 0 rgba(58,46,43,.08); }
 .top nav a { padding: 10px 4px; }
 .top nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .header-actions { display: flex; align-items: center; gap: 12px; }
-.cart, .avatar { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
+.cart, .avatar, .history { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
 .cart { position: relative; background: var(--cream); }
+.history { border: 2px solid var(--ink-soft); background: var(--pink-tint); }
 .cart-count { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; display: grid; place-items: center; border-radius: 10px; background: var(--peach); border: 1.5px solid var(--ink); font-size: 11px; font-weight: 800; }
 .avatar { border: 2px dashed var(--ink-soft); background: var(--pink-tint); }
 main { max-width: 1000px; margin: 0 auto; padding: 34px 24px 64px; }
@@ -44,7 +45,7 @@ h1 { margin-bottom: 8px; font-size: 26px; text-align: center; }
 .section-description { margin: -10px 0 22px; color: var(--ink-soft); font-size: 14px; }
 .profile-photo { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 22px; }
 .photo-preview { display: grid; place-items: center; width: 112px; height: 112px; overflow: hidden; border: 3px solid var(--pink); border-radius: 50%; background: var(--pink-tint); font-size: 42px; }
-.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.photo-preview img { width: 100%; height: 100%; object-fit: contain; }
 .photo-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .photo-actions label, .secondary { padding: 9px 14px; border: 0; border-radius: 20px; background: var(--pink-tint); font-weight: 800; cursor: pointer; }
 .photo-actions input { max-width: 220px; }
@@ -60,6 +61,9 @@ input:not([type="file"]) { min-height: 46px; padding: 9px 14px; border: 1.5px so
 .status { min-height: 24px; margin-top: 12px; font-weight: 700; }
 .status.success { color: var(--green); }
 .status.error { color: var(--error); }
+.customer-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 20px; }
+.customer-details dt { font-size: 13px; font-weight: 800; }
+.customer-details dd { min-height: 24px; overflow-wrap: anywhere; color: var(--ink-soft); }
 .form-actions { margin-top: 18px; }
 .notice { padding: 12px 16px; border-radius: 10px; background: var(--pink-tint); color: var(--ink-soft); font-size: 13px; }
 footer { padding: 24px; background: var(--pink); text-align: center; font-size: 13px; }
@@ -75,13 +79,14 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
 <body>
 <header>
   <div class="top">
-    <a href="Home.html" aria-label="Pet Guardian home"><img class="brand-logo" src="website_logo.jpeg" alt="Pet Guardian"></a>
+    <a href="Home.html" aria-label="Pet Guardian home"><img class="brand-logo" src="Brand_image/website_logo.jpeg" alt="Pet Guardian"></a>
     <nav aria-label="Profile navigation">
       <a href="Home.html">Continue shopping</a>
       <a href="Cart.html#tracking">Track orders</a>
     </nav>
     <div class="header-actions">
       <a class="cart" href="Cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
+      <a class="history" href="OrderHistory.html" aria-label="Past order history" title="Past order history">🧾</a>
       <a class="avatar" href="Profile.html" aria-label="Profile">👤</a>
     </div>
   </div>
@@ -90,6 +95,17 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
 <main class="wrap">
   <h1>My Profile</h1>
   <p class="lead">Update your profile details and manage your demo account settings.</p>
+
+  <section class="panel" aria-labelledby="customer-heading">
+    <h2 id="customer-heading">Customer information</h2>
+    <p class="status" id="customer-status" role="status" aria-live="polite">Loading customer information...</p>
+    <dl class="customer-details">
+      <div><dt>Customer ID</dt><dd id="customer-id-value">—</dd></div>
+      <div><dt>Name</dt><dd id="customer-name-value">—</dd></div>
+      <div><dt>Email</dt><dd id="customer-email-value">—</dd></div>
+      <div><dt>Address</dt><dd id="customer-address-value">—</dd></div>
+    </dl>
+  </section>
 
   <section class="panel" aria-labelledby="profile-heading">
     <h2 id="profile-heading">Personal information</h2>
@@ -103,6 +119,7 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
         </div>
       </div>
       <div class="fields">
+        <label class="field">Customer ID<input name="customerId" autocomplete="off" readonly></label>
         <label class="field">Full name<input name="name" autocomplete="name" required></label>
         <label class="field">Email address<input name="email" type="email" autocomplete="email" required></label>
         <label class="field">Address<input name="address" autocomplete="street-address"></label>
@@ -133,10 +150,12 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
 </main>
 
 <footer>Pet Guardian demo shop</footer>
+<script src="api.js"></script>
 <script>
 const PROFILE_KEY = "petGuardianProfile";
 const CART_KEY = "petGuardianCart";
 const AUTH_KEY = "petGuardianSignedIn";
+const CUSTOMER_ID_KEY = "petGuardianCustomerId";
 const form = document.getElementById("profile-form");
 const photoInput = document.getElementById("photo-input");
 let profilePhoto = "";
@@ -170,20 +189,84 @@ function setStatus(element, message, isError) {
 }
 
 try {
+  const customerId = localStorage.getItem(CUSTOMER_ID_KEY) || "";
   const savedProfile = JSON.parse(localStorage.getItem(PROFILE_KEY) || "{}");
-  form.elements.name.value = savedProfile.name || "";
-  form.elements.email.value = savedProfile.email || "";
-  form.elements.address.value = savedProfile.address || "";
-  profilePhoto = savedProfile.photo || "";
+  const sameCustomer = savedProfile.customerId === customerId;
+  form.elements.customerId.value = customerId;
+  form.elements.name.value = sameCustomer ? savedProfile.name || "" : "";
+  form.elements.email.value = sameCustomer ? savedProfile.email || "" : "";
+  form.elements.address.value = sameCustomer ? savedProfile.address || "" : "";
+  profilePhoto = sameCustomer ? savedProfile.photo || "" : "";
   renderPhoto();
 } catch (error) {
   setStatus(document.getElementById("profile-status"), "Your saved profile could not be read. You can enter your details and save again.", true);
 }
 updateCartCount();
 
+async function loadCustomerInfo() {
+  const status = document.getElementById("customer-status");
+  const customerId = localStorage.getItem(CUSTOMER_ID_KEY);
+  if (!customerId) {
+    setStatus(status, "Sign in to view customer information.", true);
+    return;
+  }
+  document.getElementById("customer-id-value").textContent = customerId;
+
+  try {
+    const result = await window.PET_API.getCustomer(customerId);
+    const customer = result?.customer ?? result;
+    if (!customer || typeof customer !== "object" || Array.isArray(customer)) {
+      throw new Error("Unexpected customer response format");
+    }
+
+    const valueFor = (...keys) => {
+      const key = Object.keys(customer).find(candidate =>
+        keys.some(alias =>
+          alias.toLowerCase().replace(/[^a-z0-9]/g, "") ===
+          candidate.toLowerCase().replace(/[^a-z0-9]/g, "")
+        )
+      );
+      return key ? customer[key] : undefined;
+    };
+    const firstName = valueFor("first_name", "customer_first_name", "firstName", "customerFirstName");
+    const lastName = valueFor("last_name", "customer_last_name", "lastName", "customerLastName");
+    const customerProfile = {
+      customerId: valueFor("customer_id", "customerid", "id") ?? customerId,
+      name: valueFor("customer_name", "customername", "full_name", "fullname", "name") ??
+        ([firstName, lastName].filter(Boolean).join(" ") || undefined),
+      email: valueFor("customer_email", "customeremail", "email", "email_address", "emailaddress"),
+      address: valueFor("address", "customer_address", "customeraddress", "full_address", "fulladdress", "shipping_address", "shippingaddress")
+    };
+    const values = {
+      customerId: String(customerProfile.customerId ?? customerId),
+      name: customerProfile.name,
+      email: customerProfile.email,
+      address: customerProfile.address
+    };
+    for (const [field, value] of Object.entries(values)) {
+      const displayValue = value == null || value === "" ? "—" : String(value);
+      document.getElementById(`customer-${field === "customerId" ? "id" : field}-value`).textContent = displayValue;
+      if (value != null && field in form.elements) {
+        form.elements[field].value = String(value);
+      }
+    }
+    status.textContent = "Customer information loaded from your account.";
+    status.className = "status";
+  } catch (error) {
+    console.error("Could not load customer information:", error);
+    const message = error.status === 404
+      ? `No customer record was found for ${customerId}.`
+      : `Customer information could not be loaded. ${error.message}`;
+    setStatus(status, message, true);
+  }
+}
+
+loadCustomerInfo();
+
 form.addEventListener("submit", event => {
   event.preventDefault();
   const profile = {
+    customerId: form.elements.customerId.value.trim(),
     name: form.elements.name.value.trim(),
     email: form.elements.email.value.trim(),
     address: form.elements.address.value.trim(),
@@ -262,6 +345,7 @@ document.getElementById("password-form").addEventListener("submit", event => {
 
 document.getElementById("sign-out").addEventListener("click", () => {
   localStorage.removeItem(AUTH_KEY);
+  localStorage.removeItem(CUSTOMER_ID_KEY);
   window.location.href = "Login.html";
 });
 </script>

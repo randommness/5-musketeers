@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Past Order History | Pet Guardian</title>
+<style>
+:root {
+  --cream: #FFF8F5;
+  --pink: #FFC5D3;
+  --peach: #FFCBA5;
+  --ink: #3A2E2B;
+  --ink-soft: rgba(58,46,43,.68);
+  --line: rgba(58,46,43,.25);
+  --pink-tint: #FFE3EA;
+  --error: #A3262A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+body { font-family: "Nunito","Segoe UI",system-ui,Arial,sans-serif; background: var(--cream); color: var(--ink); line-height: 1.45; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+header { background: var(--pink); box-shadow: 0 2px 0 rgba(58,46,43,.08); }
+.top { display: flex; align-items: center; gap: 20px; max-width: 1280px; min-height: 72px; margin: 0 auto; padding: 10px 24px; }
+.brand-logo { display: block; width: 150px; height: 52px; object-fit: contain; }
+.top nav { display: flex; align-items: center; gap: 22px; margin-left: auto; font-weight: 800; }
+.top nav a { padding: 10px 4px; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.cart, .avatar, .history { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; }
+.cart { position: relative; background: var(--cream); }
+.history { border: 2px solid var(--ink-soft); background: var(--pink-tint); }
+.cart-count { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; display: grid; place-items: center; border-radius: 10px; background: var(--peach); border: 1.5px solid var(--ink); font-size: 11px; font-weight: 800; }
+.avatar { border: 2px dashed var(--ink-soft); background: var(--pink-tint); }
+main { padding: 34px 0 64px; }
+h1 { margin-bottom: 8px; font-size: 26px; text-align: center; }
+.lead { margin: 0 auto 26px; max-width: 640px; color: var(--ink-soft); text-align: center; }
+.status { margin: 0 auto 18px; max-width: 740px; padding: 12px 16px; border-radius: 10px; background: var(--pink-tint); }
+.status.error { color: var(--error); }
+.order-card { margin: 0 auto 16px; max-width: 740px; padding: 20px; background: #fff; border: 1.5px solid var(--pink); border-radius: 14px; }
+.order-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; margin-bottom: 14px; }
+.order-heading h2 { font-size: 19px; }
+.order-status { padding: 4px 10px; border-radius: 16px; background: var(--pink-tint); font-weight: 800; }
+.order-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 20px; }
+.order-details dt { font-size: 12px; font-weight: 800; }
+.order-details dd { color: var(--ink-soft); overflow-wrap: anywhere; }
+.actions { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+.cta { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 9px 18px; border: 0; border-radius: 22px; background: var(--peach); font-weight: 800; }
+.cta.secondary { background: var(--pink-tint); }
+footer { padding: 24px; background: var(--pink); text-align: center; font-size: 13px; }
+@media (max-width: 600px) {
+  .wrap { padding: 0 16px; }
+  .top { flex-wrap: wrap; gap: 12px; padding: 10px 16px; }
+  .brand-logo { width: 126px; }
+  .top nav { order: 3; width: 100%; justify-content: space-between; gap: 10px; font-size: 13px; margin-left: 0; }
+  .order-card { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <a href="Home.html" aria-label="Pet Guardian home"><img class="brand-logo" src="Brand_image/website_logo.jpeg" alt="Pet Guardian"></a>
+    <nav aria-label="Order history navigation">
+      <a href="Home.html">Continue shopping</a>
+    </nav>
+    <div class="header-actions">
+      <a class="cart" href="Cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
+      <a class="history" href="OrderHistory.html" aria-label="Past order history" aria-current="page">🧾</a>
+      <a class="avatar" href="Profile.html" aria-label="Profile">👤</a>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Past order history</h1>
+  <p class="lead" id="history-description">Orders associated with your customer account.</p>
+  <p class="status" id="history-status" role="status" aria-live="polite">Loading order history...</p>
+  <section id="orders-list" aria-label="Past orders"></section>
+  <div class="actions">
+    <a class="cta secondary" href="Cart.html">View cart</a>
+    <button class="cta" id="retry-orders" type="button" hidden>Try again</button>
+  </div>
+</main>
+<footer>Pet Guardian demo shop</footer>
+<script src="api.js"></script>
+<script src="orders-api.js"></script>
+<script>
+const CUSTOMER_ID_KEY = "petGuardianCustomerId";
+const statusElement = document.getElementById("history-status");
+const orderList = document.getElementById("orders-list");
+const retryButton = document.getElementById("retry-orders");
+const money = amount => new Intl.NumberFormat("en-SG", {
+  style: "currency",
+  currency: "SGD"
+}).format(amount);
+
+function displayDate(value) {
+  if (!value) return "Not available";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? String(value)
+    : new Intl.DateTimeFormat("en-SG", { dateStyle: "medium" }).format(date);
+}
+
+function addDetail(parent, label, value) {
+  const wrapper = document.createElement("div");
+  const term = document.createElement("dt");
+  const description = document.createElement("dd");
+  term.textContent = label;
+  description.textContent = value == null || value === "" ? "Not available" : String(value);
+  wrapper.append(term, description);
+  parent.append(wrapper);
+}
+
+function renderOrder(order) {
+  const card = document.createElement("article");
+  card.className = "order-card";
+  const heading = document.createElement("div");
+  heading.className = "order-heading";
+  const title = document.createElement("h2");
+  title.textContent = `Order ${order.order_id ?? order.id ?? "—"}`;
+  const state = document.createElement("span");
+  state.className = "order-status";
+  state.textContent = order.order_status ?? order.status ?? "Status unavailable";
+  heading.append(title, state);
+
+  const details = document.createElement("dl");
+  details.className = "order-details";
+  addDetail(details, "Order date", displayDate(order.order_date ?? order.created_at ?? order.createdAt));
+  const amount = order.final_amount_paid ?? order.total_order_value ?? order.total;
+  addDetail(details, "Amount paid", typeof amount === "number" ? money(amount) : amount);
+  addDetail(details, "Delivery method", order.delivery_method ?? order.fulfillment);
+  addDetail(details, "Payment", order.payment_method);
+  addDetail(details, "Payment status", order.payment_status);
+  if (order.return_status) addDetail(details, "Return status", order.return_status);
+  card.append(heading, details);
+  orderList.append(card);
+}
+
+async function loadOrderHistory() {
+  retryButton.hidden = true;
+  orderList.replaceChildren();
+  const customerId = localStorage.getItem(CUSTOMER_ID_KEY);
+  if (!customerId) {
+    statusElement.className = "status error";
+    statusElement.textContent = "Sign in to view orders for your customer account.";
+    retryButton.hidden = true;
+    return;
+  }
+
+  document.getElementById("history-description").textContent = `Orders for customer ${customerId}.`;
+  statusElement.className = "status";
+  statusElement.textContent = "Loading order history...";
+  try {
+    const result = await window.PET_ORDERS_API.getOrders(customerId);
+    const orders = Array.isArray(result) ? result : result?.orders;
+    if (!Array.isArray(orders)) throw new Error("The order API returned an unexpected response.");
+    orders.sort((first, second) =>
+      new Date(second.order_date ?? second.created_at ?? 0) -
+      new Date(first.order_date ?? first.created_at ?? 0)
+    );
+    if (!orders.length) {
+      statusElement.textContent = "No past orders were found for this customer.";
+      return;
+    }
+    statusElement.textContent = `${orders.length} past ${orders.length === 1 ? "order" : "orders"} found.`;
+    orders.forEach(renderOrder);
+  } catch (error) {
+    console.error("Could not load order history:", error);
+    statusElement.className = "status error";
+    statusElement.textContent = `Order history could not be loaded. ${error.message}`;
+    retryButton.hidden = false;
+  }
+}
+
+retryButton.addEventListener("click", loadOrderHistory);
+loadOrderHistory();
+</script>
+</body>
+</html>
