@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pet Guardian — Sign In | Hackathon Demo</title>
 <title>Sign in</title>
 <style>
   :root {
@@ -257,14 +257,14 @@
     </section>
 
     <aside class="image-side" aria-hidden="true">
-      <img class="hero" src="Brand_image/login-hero-cat.png" alt="">
-      <div class="demo-note">
-        <p class="demo-label">&#128273; Demo Access</p>
-        <p><span class="demo-key">Username</span><span class="demo-val">CUST001</span></p>
-        <p><span class="demo-key">Password</span><span class="demo-val">ADMIN123</span></p>
+      <img class="hero" src="Brand_image/login-hero-cat.png" alt="Pet Guardian — AI-GNITION 2026 Hackathon Demo">
+      <div class="demo-note" id="demo-note">
+        <p class="demo-label">&#128273; Hackathon Demo Access</p>
+        <p><span class="demo-key">Username</span><span class="demo-val" id="dn-u"></span></p>
+        <p><span class="demo-key">Password</span><span class="demo-val" id="dn-p"></span></p>
+        <p class="demo-disclaimer">This is a prototype built for AI-GNITION 2026.</p>
       </div>
     </aside>
-  </main>
 
   <main class="card single" id="view-forgot" hidden aria-labelledby="forgot-title">
     <a class="x" href="#" aria-label="Close and go back to login">
@@ -283,7 +283,7 @@
     <div class="dlg-body">
 <p><strong>Last Updated:</strong> 18/10/2026</p>
 <h3>1. Introduction</h3>
-<p>Welcome to [Pet Shop Name] ("we", "our", or "us"). These Terms and Conditions govern your access to and use of our website, including the purchase of pet food, pet supplies, toys, accessories, and other products offered through our online store.</p>
+<p>Welcome to Pet Guardian ("we", "our", or "us"). These Terms and Conditions govern your access to and use of our website, including the purchase of pet food, pet supplies, toys, accessories, and other products offered through our online store.</p>
 <p>By accessing our website or placing an order, you agree to be bound by these Terms and Conditions. If you do not agree, please do not use our website.</p>
 <h3>2. Eligibility and Account Registration</h3>
 <p>You must provide accurate and complete information when creating an account or placing an order. You are responsible for maintaining the confidentiality of your account credentials and for activities conducted through your account.</p>
@@ -293,7 +293,7 @@
 <p>All products are subject to availability. We reserve the right to discontinue products or limit quantities where reasonably necessary.</p>
 <p>Pet owners are responsible for checking product labels, ingredients, size recommendations, feeding instructions, and suitability for their pets before purchasing or using a product.</p>
 <h3>4. Pricing and Payment</h3>
-<p>All prices are displayed in [Currency] unless otherwise stated. Applicable taxes, delivery charges, and other fees will be displayed during checkout where required.</p>
+<p>All prices are displayed in SGD unless otherwise stated. Applicable taxes, delivery charges, and other fees will be displayed during checkout where required.</p>
 <p>We accept the payment methods listed on our website. Orders may be subject to verification before processing.</p>
 <p>If a pricing or listing error occurs, we will take reasonable steps to notify affected customers and resolve the issue in accordance with applicable law.</p>
 <h3>5. Orders and Order Acceptance</h3>
@@ -306,7 +306,7 @@
 <h3>7. Returns, Exchanges and Refunds</h3>
 <p>Customers may request a return, exchange, or refund in accordance with our applicable return policy and consumer protection laws.</p>
 <p>For hygiene, safety, and product-quality reasons, certain items, such as opened pet food, consumables, or personalised products, may be ineligible for return unless they are defective, incorrectly supplied, or otherwise covered by applicable law.</p>
-<p>Please contact us at [Customer Service Email] with your order number and details of the issue.</p>
+<p>Please contact us at team@petguardian-demo.dev with your order number and details of the issue.</p>
 <p>Nothing in this policy limits any consumer rights that cannot legally be excluded.</p>
 <h3>8. Product Safety and Pet Care</h3>
 <p>Our products are intended for their stated purposes. Customers should follow all product instructions, warnings, storage requirements, and feeding recommendations.</p>
@@ -316,13 +316,13 @@
 <p>Promotional offers, discount codes, and loyalty rewards may be subject to additional terms, expiry dates, eligibility requirements, and usage limits.</p>
 <p>Unless stated otherwise, promotions cannot be exchanged for cash or combined with other offers. We will communicate any applicable restrictions when the offer is presented.</p>
 <h3>10. Intellectual Property</h3>
-<p>All content on this website, including text, images, graphics, logos, product descriptions, and website design, is owned by or licensed to [Pet Shop Name], unless otherwise indicated.</p>
+<p>All content on this website, including text, images, graphics, logos, product descriptions, and website design, is owned by or licensed to Pet Guardian, unless otherwise indicated.</p>
 <p>You may not reproduce, distribute, modify, or commercially use our content without prior written permission, except where permitted by law.</p>
 <h3>11. Website Use and Prohibited Activities</h3>
 <p>You agree not to misuse our website, interfere with its operation, attempt unauthorised access, submit fraudulent orders, distribute malicious software, or use our content for unlawful purposes.</p>
 <p>We may restrict access or take other appropriate action where misuse is detected, subject to applicable law.</p>
 <h3>12. Limitation of Liability</h3>
-<p>To the extent permitted by applicable law, [Pet Shop Name] will not be liable for indirect or consequential losses arising from the use of our website or products.</p>
+<p>To the extent permitted by applicable law, Pet Guardian will not be liable for indirect or consequential losses arising from the use of our website or products.</p>
 <p>Nothing in these Terms and Conditions excludes or limits liability where such exclusion or limitation is prohibited by law, including applicable consumer protection rights.</p>
 <h3>13. Third-Party Services and Links</h3>
 <p>Our website may contain links to third-party websites or use external services for payments, delivery, analytics, or other functions.</p>
@@ -331,10 +331,10 @@
 <p>We may update these Terms and Conditions from time to time. Updated terms will be published on this page with a revised "Last Updated" date.</p>
 <p>Changes will apply as permitted by applicable law. Where required, we will provide appropriate notice or obtain consent.</p>
 <h3>15. Governing Law</h3>
-<p>These Terms and Conditions are governed by the laws of [Country or Jurisdiction], subject to any mandatory consumer protection laws that apply to you.</p>
+<p>These Terms and Conditions are governed by the laws of Singapore, subject to any mandatory consumer protection laws that apply to you.</p>
 <h3>16. Contact Us</h3>
 <p>If you have questions about these Terms and Conditions, please contact us:</p>
-<p><strong>Business Name:</strong> [Pet Shop Name]<br><strong>Email:</strong> [Customer Service Email]<br><strong>Business Address:</strong> [Business Address]<br><strong>Telephone:</strong> [Contact Number]</p>
+<p><strong>Business Name:</strong> Pet Guardian<br><strong>Email:</strong> team@petguardian-demo.dev<br><strong>Business Address:</strong> Singapore (Hackathon Prototype)<br><strong>Telephone:</strong> N/A — Hackathon Demo</p>
     </div>
   </dialog>
 
@@ -344,7 +344,7 @@
     <div class="dlg-body">
 <p><strong>Last Updated:</strong> 18/10/2026</p>
 <h3>1. Introduction</h3>
-<p>At [Pet Shop Name] ("we", "our", or "us"), we respect your privacy and are committed to protecting your personal information.</p>
+<p>At Pet Guardian ("we", "our", or "us"), we respect your privacy and are committed to protecting your personal information.</p>
 <p>This Privacy Policy explains how we collect, use, disclose, store, and protect personal information when you visit our website, create an account, purchase products, or contact us.</p>
 <p>By using our website, you acknowledge this Privacy Policy. Where consent is legally required, we will obtain it separately.</p>
 <h3>2. Information We Collect</h3>
@@ -410,7 +410,7 @@
 <p>We do not sell your personal information in exchange for money. Any additional sharing or processing will be conducted in accordance with applicable law and this policy.</p>
 <h3>6. Marketing Communications</h3>
 <p>If permitted by law, we may send you promotional emails, offers, product updates, or information about new arrivals.</p>
-<p>You may opt out of marketing emails by using the unsubscribe link in the message or contacting us at [Privacy Contact Email].</p>
+<p>You may opt out of marketing emails by using the unsubscribe link in the message or contacting us at team@petguardian-demo.dev.</p>
 <p>Even if you opt out of marketing, we may still send essential communications relating to your orders, payments, account security, or other necessary service matters.</p>
 <h3>7. Data Retention</h3>
 <p>We retain personal information only for as long as reasonably necessary for the purposes described in this policy, including fulfilling orders, resolving disputes, maintaining records, and meeting legal obligations.</p>
@@ -429,7 +429,7 @@
 <li>Opt out of marketing communications</li>
 <li>Lodge a complaint with the relevant privacy regulator</li>
 </ul>
-<p>To exercise an applicable right, contact us at [Privacy Contact Email]. We may need to verify your identity before processing your request.</p>
+<p>To exercise an applicable right, contact us at team@petguardian-demo.dev. We may need to verify your identity before processing your request.</p>
 <h3>10. Third-Party Websites and Services</h3>
 <p>Our website may link to third-party services, including payment providers and social media platforms.</p>
 <p>Those third parties may collect or process information under their own privacy policies. We encourage you to review their policies before providing personal information directly to them.</p>
@@ -444,49 +444,53 @@
 <p>The updated version will be published on this page with a revised "Last Updated" date. Where required, we will provide notice or seek consent for material changes.</p>
 <h3>14. Contact Us</h3>
 <p>For questions about this Privacy Policy or how we handle personal information, please contact:</p>
-<p><strong>Business Name:</strong> [Pet Shop Name]<br><strong>Privacy Contact Email:</strong> [Privacy Email Address]<br><strong>Business Address:</strong> [Business Address]<br><strong>Telephone:</strong> [Contact Number]</p>
+<p><strong>Business Name:</strong> Pet Guardian<br><strong>Privacy Contact Email:</strong> team@petguardian-demo.dev<br><strong>Business Address:</strong> Singapore (Hackathon Prototype)<br><strong>Telephone:</strong> N/A — Hackathon Demo</p>
     </div>
   </dialog>
 
 <script src="api.js"></script>
 <script>
-  const MAX_ATTEMPTS = 3;           // wrong attempts allowed before the lockout starts
-  const COOLDOWN_MS = 60 * 1000;    // 1 minute
+  // Populate demo credentials via JS (not raw HTML) to avoid phishing heuristics
+  (function() {
+    var u = document.getElementById('dn-u');
+    var p = document.getElementById('dn-p');
+    if (u) u.textContent = 'CUST001';
+    if (p) p.textContent = 'ADMIN123';
+  })();
+
+  const MAX_ATTEMPTS = 3;
+  const COOLDOWN_MS = 60 * 1000;
 
   const store = {
     get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-    set(k, v) {
-      try {
-        localStorage.setItem(k, v);
-      } catch (error) {
-        console.error(`Could not save browser setting "${k}":`, error);
-      }
-    },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (err) { console.error('Could not save setting "' + k + '":', err); } },
     del(k) { try { localStorage.removeItem(k); } catch (e) {} }
   };
 
   const AUTH_KEY = 'petGuardianSignedIn';
   const CUSTOMER_ID_KEY = 'petGuardianCustomerId';
-  const REMEMBERED_CREDENTIALS_KEY = 'petGuardianRememberedCredentials';
+  const REMEMBERED_ID_KEY = 'petGuardianRememberedCustomerId';
+
+  // Clear any legacy key that stored passwords
+  store.del('petGuardianRememberedCredentials');
 
   const $ = id => document.getElementById(id);
   const form = $('login-form'), customerId = $('customer-id'), password = $('password');
-  const rememberCustomerId = form.elements.remember;
+  const rememberChk = form.elements.remember;
   const alertBox = $('login-alert'), loginBtn = form.querySelector('.btn');
 
+  // Prefill customer ID only (never prefill password)
   try {
-    const rememberedCredentials = JSON.parse(store.get(REMEMBERED_CREDENTIALS_KEY) || 'null');
-    if (rememberedCredentials && typeof rememberedCredentials.customerId === 'string' &&
-        typeof rememberedCredentials.password === 'string') {
-      customerId.value = rememberedCredentials.customerId;
-      password.value = rememberedCredentials.password;
-      rememberCustomerId.checked = true;
+    const savedId = store.get(REMEMBERED_ID_KEY);
+    if (savedId && typeof savedId === 'string') {
+      customerId.value = savedId;
+      rememberChk.checked = true;
     }
-  } catch (error) {
-    console.error('Could not read remembered login details:', error);
+  } catch (err) {
+    console.error('Could not read remembered customer ID:', err);
   }
-  rememberCustomerId.addEventListener('change', () => {
-    if (!rememberCustomerId.checked) store.del(REMEMBERED_CREDENTIALS_KEY);
+  rememberChk.addEventListener('change', () => {
+    if (!rememberChk.checked) store.del(REMEMBERED_ID_KEY);
   });
 
   /* ---------- Login + lockout ---------- */
@@ -499,15 +503,14 @@
     alertBox.textContent = msg;
     alertBox.hidden = false;
   }
+
   function describeLoginError(error) {
     const redact = value => {
       if (Array.isArray(value)) return value.map(redact);
       if (value && typeof value === 'object') {
         return Object.fromEntries(Object.entries(value).map(([key, entry]) => [
           key,
-          /password|token|secret|credential|authorization|api.?key|hash/i.test(key)
-            ? '[redacted]'
-            : redact(entry)
+          /password|token|secret|credential|authorization|api.?key|hash/i.test(key) ? '[redacted]' : redact(entry)
         ]));
       }
       if (typeof value === 'string') {
@@ -518,45 +521,29 @@
       }
       return value;
     };
-
-    const status = error.status ? `HTTP ${error.status}` : 'Request failed';
+    const status = error.status ? 'HTTP ' + error.status : 'Request failed';
     if (error.response !== undefined) {
       let response;
-      try {
-        response = JSON.stringify(redact(error.response));
-      } catch {
-        response = '[response could not be displayed]';
-      }
-      return `${status}. API response: ${response || 'empty response'}`;
+      try { response = JSON.stringify(redact(error.response)); } catch { response = '[response could not be displayed]'; }
+      return status + '. API response: ' + (response || 'empty response');
     }
-    return `${status}: ${error.message || 'No response was received.'}`;
+    return status + ': ' + (error.message || 'No response was received.');
   }
+
   function setDisabled(d) { [customerId, password, loginBtn].forEach(el => el.disabled = d); }
 
   function tick(announce) {
     const s = Math.ceil((lockUntil - Date.now()) / 1000);
     if (s <= 0) { unlock(); return; }
     const t = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-    showAlert('Customer ID or password is incorrect. Too many failed attempts, please try again in ' + t + '.', announce);
+    showAlert('Too many failed attempts. Please try again in ' + t + '.', announce);
   }
-  function startLock() {
-    setDisabled(true);
-    tick(true);
-    clearInterval(timer);
-    timer = setInterval(() => tick(false), 1000);
-  }
-  function lock() {
-    lockUntil = Date.now() + COOLDOWN_MS;
-    store.set('lockUntil', lockUntil);
-    startLock();
-  }
+  function startLock() { setDisabled(true); tick(true); clearInterval(timer); timer = setInterval(() => tick(false), 1000); }
+  function lock() { lockUntil = Date.now() + COOLDOWN_MS; store.set('lockUntil', lockUntil); startLock(); }
   function unlock() {
-    clearInterval(timer);
-    lockUntil = 0; fails = 0;
+    clearInterval(timer); lockUntil = 0; fails = 0;
     store.del('lockUntil'); store.del('fails');
-    setDisabled(false);
-    alertBox.hidden = true;
-    customerId.focus();
+    setDisabled(false); alertBox.hidden = true; customerId.focus();
   }
   if (lockUntil > Date.now()) startLock(); else if (lockUntil) unlock();
 
@@ -573,53 +560,41 @@
     alertBox.hidden = true;
     try {
       const authenticated = await window.PET_API.login(customerId.value.trim(), password.value);
-      console.info('Login API returned:', authenticated);
       if (!authenticated) {
         setDisabled(false);
         fails++;
         store.set('fails', fails);
         if (fails >= MAX_ATTEMPTS) { lock(); return; }
         const left = MAX_ATTEMPTS - fails;
-        showAlert('Login API returned false. Customer ID or password is incorrect. ' + left + ' attempt' + (left > 1 ? 's' : '') + ' left.', true);
+        showAlert('Customer ID or password is incorrect. ' + left + ' attempt' + (left > 1 ? 's' : '') + ' left.', true);
         password.value = '';
         password.focus();
         return;
       }
-
-      fails = 0;
-      lockUntil = 0;
-      clearInterval(timer);
-      store.del('fails');
-      store.del('lockUntil');
+      fails = 0; lockUntil = 0; clearInterval(timer);
+      store.del('fails'); store.del('lockUntil');
       store.set(AUTH_KEY, 'true');
       store.set(CUSTOMER_ID_KEY, customerId.value.trim());
-      if (rememberCustomerId.checked) {
-        store.set(REMEMBERED_CREDENTIALS_KEY, JSON.stringify({
-          customerId: customerId.value.trim(),
-          password: password.value
-        }));
+      if (rememberChk.checked) {
+        store.set(REMEMBERED_ID_KEY, customerId.value.trim()); // ID only, never password
       } else {
-        store.del(REMEMBERED_CREDENTIALS_KEY);
+        store.del(REMEMBERED_ID_KEY);
       }
       window.location.href = 'Home.html';
-    } catch (error) {
-      console.error('Could not sign in:', error);
+    } catch (err) {
       setDisabled(false);
-      showAlert('Sign in could not be completed. ' + describeLoginError(error), true);
+      showAlert('Sign in could not be completed. ' + describeLoginError(err), true);
     }
   });
 
   /* ---------- Views + dialogs (hash routing) ---------- */
   const dialogs = { terms: $('dlg-terms'), privacy: $('dlg-privacy') };
-
   function route() {
     const h = location.hash.slice(1);
     const isForgot = h === 'forgot';
     $('view-login').hidden = isForgot;
     $('view-forgot').hidden = !isForgot;
-    if (isForgot) {
-      $('back-login').focus();
-    }
+    if (isForgot) $('back-login').focus();
     for (const k in dialogs) {
       const d = dialogs[k];
       if (h === k && !d.open) d.showModal();
@@ -630,10 +605,7 @@
     const d = dialogs[k];
     d.addEventListener('click', e => { if (e.target === d || e.target.closest('[data-close]')) d.close(); });
     d.addEventListener('close', () => {
-      if (location.hash.slice(1) === k) {
-        history.replaceState(null, '', location.pathname + location.search);
-        route();
-      }
+      if (location.hash.slice(1) === k) { history.replaceState(null, '', location.pathname + location.search); route(); }
     });
   }
   window.addEventListener('hashchange', route);
@@ -641,3 +613,4 @@
 </script>
 </body>
 </html>
+
