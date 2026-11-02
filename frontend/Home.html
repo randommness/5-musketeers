@@ -1,10 +1,9 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="google-site-verification" content="OaYNQVrGiuPLM6LOGFLoGcTy_aoBUpRhHxLlqNDvcrY" />
 <title>Pet Guardian</title>
 
 <style>
@@ -598,7 +597,7 @@ footer {
 .p-price small { font-size: 14px; color: var(--ink-soft); }
 .perks { flex: 1; margin-bottom: 20px; list-style: none; }
 .perks li { padding: 6px 0; font-size: 14px; }
-.perks li::before { content: "✓ "; font-weight: 800; }
+.perks li::before { content: "âœ“ "; font-weight: 800; }
 .sec { margin: 44px 0 14px; font-size: 20px; text-align: center; }
 .faq { max-width: 680px; margin: 0 auto; }
 .faq details { margin-bottom: 10px; padding: 14px 18px; background: #fff; border: 1.5px solid var(--pink); border-radius: 12px; }
@@ -723,17 +722,17 @@ footer {
 
       <form class="search" role="search" id="search-form">
         <input type="search" placeholder="Search products..." aria-label="Search products">
-        <button type="submit" aria-label="Search">⌕</button>
+        <button type="submit" aria-label="Search">âŒ•</button>
         <div class="search-suggestions" id="search-suggestions" role="listbox"
              aria-label="Recommended products" hidden></div>
       </form>
 
       <div class="actions">
         <a href="Cart.html" class="cart" aria-label="Cart">
-          🛒 <span class="count">0</span>
+          ðŸ›’ <span class="count">0</span>
         </a>
-        <a href="OrderHistory.html" class="history" aria-label="Past order history" title="Past order history">🧾</a>
-        <a href="Profile.html" class="avatar" aria-label="Profile">👤</a>
+        <a href="OrderHistory.html" class="history" aria-label="Past order history" title="Past order history">ðŸ§¾</a>
+        <a href="Profile.html" class="avatar" aria-label="Profile">ðŸ‘¤</a>
       </div>
     </div>
   </div>
@@ -746,7 +745,7 @@ footer {
         <li><a href="#fish">Fish</a></li>
         <li><a href="#rabbit">Rabbit</a></li>
         <li class="dd">
-          <button type="button" class="dd-btn" id="store-button" aria-expanded="false" aria-controls="store-menu">Store ▾</button>
+          <button type="button" class="dd-btn" id="store-button" aria-expanded="false" aria-controls="store-menu">Store â–¾</button>
           <ul class="dd-menu store-menu" id="store-menu" hidden>
             <li><a href="#store-pawfect">Pawfect Pets</a></li>
             <li><a href="#store-happy-tail">Happy Tail</a></li>
@@ -757,7 +756,7 @@ footer {
           </ul>
         </li>
         <li class="dd">
-          <button type="button" class="dd-btn" aria-expanded="false" aria-controls="membership-menu">Membership ▾</button>
+          <button type="button" class="dd-btn" aria-expanded="false" aria-controls="membership-menu">Membership â–¾</button>
           <ul class="dd-menu" id="membership-menu" hidden>
             <li><a href="#renew">Renew Membership</a></li>
             <li><a href="#benefits">Membership Benefits</a></li>
@@ -806,21 +805,21 @@ footer {
 </main>
 
 <div class="cart-toast" id="cart-toast" role="status" aria-live="polite" hidden>
-  <span class="tick" aria-hidden="true">✓</span>
+  <span class="tick" aria-hidden="true">âœ“</span>
   <span id="cart-toast-message"></span>
 </div>
 
 <!-- MEMBERSHIP HEADER -->
 <header id="sub-header" hidden>
   <div class="wrap sub-top">
-    <button type="button" class="back" id="back">← Back</button>
+    <button type="button" class="back" id="back">â† Back</button>
     <h1 class="sub-title" id="sub-title"></h1>
     <div class="actions">
       <a href="Cart.html" class="cart" aria-label="Cart">
-        🛒 <span class="count">0</span>
+        ðŸ›’ <span class="count">0</span>
       </a>
-      <a href="OrderHistory.html" class="history" aria-label="Past order history" title="Past order history">🧾</a>
-      <a href="Profile.html" class="avatar" aria-label="Profile">👤</a>
+      <a href="OrderHistory.html" class="history" aria-label="Past order history" title="Past order history">ðŸ§¾</a>
+      <a href="Profile.html" class="avatar" aria-label="Profile">ðŸ‘¤</a>
     </div>
   </div>
 </header>
@@ -1023,7 +1022,7 @@ footer {
 </main>
 
 <footer>
-  <div class="wrap">© Pet Guardian. All rights reserved.</div>
+  <div class="wrap">Â© Pet Guardian. All rights reserved.</div>
 </footer>
 
 <script src="shop-data.js"></script>
@@ -1153,19 +1152,19 @@ function renderProducts() {
       ? `<p class="product-description">${escapeHtml(product.description)}</p>`
       : ""}
     <div class="product-rating" aria-label="${product.rating.toFixed(1)} out of 5 stars, ${product.reviewCount} reviews">
-      ★ ${product.rating.toFixed(1)} · ${product.reviewCount} reviews
+      â˜… ${product.rating.toFixed(1)} Â· ${product.reviewCount} reviews
     </div>
     <div class="product-size">${escapeHtml([
       [product.weight, product.weightUnit].filter(Boolean).join(" "),
       product.size,
       product.packagingType
-    ].filter(Boolean).join(" · "))}</div>
+    ].filter(Boolean).join(" Â· "))}</div>
     <div class="price">
       <b>${productMoney(product)}</b>
     </div>
     <div class="buy">
       <div class="qty">
-        <button type="button" data-act="dec" aria-label="Decrease quantity">−</button>
+        <button type="button" data-act="dec" aria-label="Decrease quantity">âˆ’</button>
         <input type="number" value="1" min="1" aria-label="Quantity">
         <button type="button" data-act="inc" aria-label="Increase quantity">+</button>
       </div>
@@ -1332,7 +1331,7 @@ function renderSearchSuggestions() {
 
     const detail = document.createElement("span");
     detail.className = "search-suggestion-detail";
-    detail.textContent = `${money(product.price)} · ★ ${product.rating.toFixed(1)}`;
+    detail.textContent = `${money(product.price)} Â· â˜… ${product.rating.toFixed(1)}`;
 
     option.append(name, detail);
     searchSuggestions.append(option);
@@ -1903,7 +1902,7 @@ function a(){const G=['setFullYear','getBoundingClientRect','data-immersive','62
   const dismissGreeting = document.createElement("button");
   dismissGreeting.type = "button";
   dismissGreeting.setAttribute("aria-label", "Dismiss chatbot greeting");
-  dismissGreeting.textContent = "×";
+  dismissGreeting.textContent = "Ã—";
   dismissGreeting.style.cssText =
     "flex:none;border:0;background:transparent;color:inherit;font:700 20px/1 sans-serif;cursor:pointer";
   greeting.append(greetingText, dismissGreeting);
