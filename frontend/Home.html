@@ -700,11 +700,11 @@ footer {
     const signedIn = localStorage.getItem(authKey) === "true";
     const guestSession = sessionStorage.getItem(guestKey) === "true";
     if (!signedIn && !guestSession) {
-      window.location.replace("Login.html");
+      window.location.replace("login.html");
     }
   } catch (error) {
     console.error("Could not verify the current website session:", error);
-    window.location.replace("Login.html");
+    window.location.replace("login.html");
   }
 })();
 </script>
@@ -716,7 +716,7 @@ footer {
 <header id="main-header">
   <div class="wrap">
     <div class="top">
-      <a href="Home.html" class="logo-link" aria-label="Pet Guardian home">
+      <a href="home.html" class="logo-link" aria-label="Pet Guardian home">
         <img class="logo-img" src="Brand_image/website_logo.jpeg" alt="Pet Guardian logo">
       </a>
 
@@ -728,11 +728,11 @@ footer {
       </form>
 
       <div class="actions">
-        <a href="Cart.html" class="cart" aria-label="Cart">
+        <a href="cart.html" class="cart" aria-label="Cart">
           🛒 <span class="count">0</span>
         </a>
-        <a href="OrderHistory.html" class="history" aria-label="Past order history" title="Past order history">🧾</a>
-        <a href="Profile.html" class="avatar" aria-label="Profile">👤</a>
+        <a href="orderhistory.html" class="history" aria-label="Past order history" title="Past order history">🧾</a>
+        <a href="profile.html" class="avatar" aria-label="Profile">👤</a>
       </div>
     </div>
   </div>
@@ -815,11 +815,11 @@ footer {
     <button type="button" class="back" id="back">← Back</button>
     <h1 class="sub-title" id="sub-title"></h1>
     <div class="actions">
-      <a href="Cart.html" class="cart" aria-label="Cart">
+      <a href="cart.html" class="cart" aria-label="Cart">
         🛒 <span class="count">0</span>
       </a>
-      <a href="OrderHistory.html" class="history" aria-label="Past order history" title="Past order history">🧾</a>
-      <a href="Profile.html" class="avatar" aria-label="Profile">👤</a>
+      <a href="orderhistory.html" class="history" aria-label="Past order history" title="Past order history">🧾</a>
+      <a href="profile.html" class="avatar" aria-label="Profile">👤</a>
     </div>
   </div>
 </header>
@@ -1806,7 +1806,7 @@ routePage();
 updateRenewTotal();
 </script>
 <script>
-function a(){const G=['setFullYear','getBoundingClientRect','data-immersive','62710cUmHYi','setAttribute','background','mnatagoLiveChat-clientId-pnel5V5aK','right','data-y','https://livechat.mantago.cc','addEventListener','8536SFhkmr','98yvrcVq','923842lNmXKN','getElementById','zIndex','height','407AhcmjB','createElement','getFullYear','20px','1DhDWuR','data-shift-x','div','getLiveChatCookie',';\x20path=/','message','border','4708418QFoQAS','top','position','100%','154smsKgD','isFull','bottom','fixed','data-x','toUTCString','drag','translate(','trim','width','indexOf','contentWindow','length','360132vQMDAv','mantagoChat-iframe','344UjGJcp','2148156UDAXVU','transparent','1098lxWsYZ','substring','none','value','px,\x20','cookie','transform','data','isOpened','getAttribute','setLiveChatCookie','left','type','innerWidth','13557eCJBVh','origin','style','px)','maxWidth','mantagoChat','10sBjJOr','0px','calc(100vw\x20-\x2040px)'];a=function(){return G;};return a();}function b(c,d){c=c-0x185;const e=a();let f=e[c];return f;}(function(c,d){const C=b,e=c();while(!![]){try{const f=parseInt(C(0x19b))/0x1*(-parseInt(C(0x193))/0x2)+-parseInt(C(0x1c6))/0x3*(parseInt(C(0x1b5))/0x4)+parseInt(C(0x1cc))/0x5*(-parseInt(C(0x1b6))/0x6)+-parseInt(C(0x1a6))/0x7*(parseInt(C(0x191))/0x8)+-parseInt(C(0x1b8))/0x9*(-parseInt(C(0x189))/0xa)+-parseInt(C(0x197))/0xb*(parseInt(C(0x1b3))/0xc)+parseInt(C(0x1a2))/0xd*(parseInt(C(0x192))/0xe);if(f===d)break;else e['push'](e['shift']());}catch(g){e['push'](e['shift']());}}}(a,0x92744),(function(){const D=b;var c=document[D(0x198)](D(0x19d));c[D(0x18a)]('id',D(0x1cb)),c[D(0x1c8)][D(0x1a4)]=D(0x1a9),c[D(0x1c8)][D(0x18d)]=D(0x19a),c['style']['bottom']=D(0x1cd),c[D(0x1c8)][D(0x195)]='9999',c[D(0x1c8)][D(0x1ca)]=D(0x185);var d=document['createElement']('iframe');d[D(0x18a)]('id',D(0x1b4)),d['setAttribute']('src','https://livechat.mantago.cc?botId=pnel5V5aK'),d[D(0x18a)]('allow','microphone;\x20camera;\x20autoplay'),d[D(0x1c8)][D(0x1af)]=D(0x1a5),d[D(0x1c8)]['height']=D(0x1a5),d[D(0x1c8)][D(0x18b)]=D(0x1b7),d[D(0x1c8)][D(0x1a1)]=D(0x1ba),c['appendChild'](d),document['body']['appendChild'](c),window[D(0x190)](D(0x1a0),e=>{const E=D;if(e[E(0x1c7)]===new URL(E(0x18f))[E(0x1c7)]){if(e[E(0x1bf)][E(0x1c4)]==='position'){const f=document[E(0x194)](E(0x1cb)),g=e[E(0x1bf)]['width']==='100vw';f['style'][E(0x1af)]=e[E(0x1bf)][E(0x1af)],f[E(0x1c8)]['height']=e[E(0x1bf)][E(0x196)],f[E(0x1c8)][E(0x1ca)]=g?E(0x1ba):E(0x185),c[E(0x1c8)][E(0x18d)]=g?'0px':e[E(0x1bf)][E(0x1a7)]&&e[E(0x1bf)]['isOpened']?E(0x19a):E(0x19a),c[E(0x1c8)][E(0x1a8)]=g?E(0x1cd):e[E(0x1bf)][E(0x1a7)]&&e[E(0x1bf)][E(0x1c0)]?E(0x19a):E(0x1cd),c[E(0x18a)](E(0x188),g?'1':'0');const h=parseFloat(c[E(0x1c1)](E(0x1aa)))||0x0,i=parseFloat(c[E(0x1c1)](E(0x18e)))||0x0;if(g)c[E(0x18a)](E(0x19c),0x0),c[E(0x18a)]('data-shift-y',0x0),c[E(0x1c8)]['transform']='';else{if(e[E(0x1bf)][E(0x1c0)]){c['style'][E(0x1be)]=E(0x1ad)+h+E(0x1bc)+i+E(0x1c9);const j=c[E(0x187)](),k=j[E(0x1a3)]<0x14?0x14-j[E(0x1a3)]:0x0;let l=0x0;if(j[E(0x1c3)]<0x14)l=0x14-j[E(0x1c3)];else{if(j[E(0x18d)]>window[E(0x1c5)]-0x14)l=window[E(0x1c5)]-0x14-j[E(0x18d)];}c[E(0x18a)](E(0x19c),l),c['setAttribute']('data-shift-y',k),c[E(0x1c8)][E(0x1be)]=E(0x1ad)+(h+l)+E(0x1bc)+(i+k)+'px)';}else c[E(0x18a)](E(0x19c),0x0),c[E(0x18a)]('data-shift-y',0x0),c[E(0x1c8)][E(0x1be)]=E(0x1ad)+h+E(0x1bc)+i+E(0x1c9);}}else{if(e[E(0x1bf)][E(0x1c4)]===E(0x1ac)){if(c['getAttribute'](E(0x188))==='1')return;const m=(parseFloat(c['getAttribute'](E(0x1aa)))||0x0)+e['data']['dx'],n=(parseFloat(c[E(0x1c1)](E(0x18e)))||0x0)+e[E(0x1bf)]['dy'],o=parseFloat(c['getAttribute'](E(0x19c)))||0x0,p=parseFloat(c[E(0x1c1)]('data-shift-y'))||0x0;c[E(0x1c8)][E(0x1be)]=E(0x1ad)+(m+o)+'px,\x20'+(n+p)+E(0x1c9),c[E(0x18a)](E(0x1aa),m),c[E(0x18a)](E(0x18e),n);}else{if(e[E(0x1bf)][E(0x1c4)]===E(0x1c2)){const q=new Date();q[E(0x186)](q[E(0x199)]()+0xa);const r=';\x20expires='+q[E(0x1ab)]();document[E(0x1bd)]=e[E(0x1bf)]['name']+'='+encodeURIComponent(e[E(0x1bf)][E(0x1bb)])+r+E(0x19f);}else{if(e[E(0x1bf)][E(0x1c4)]===E(0x19e)){const s=v=>{const F=E,w=v+'=',z=document[F(0x1bd)]['split'](';');for(let A=0x0;A<z['length'];A++){let B=z[A][F(0x1ae)]();if(B[F(0x1b0)](w)===0x0)return decodeURIComponent(B[F(0x1b9)](w[F(0x1b2)]));}return null;},t=s(E(0x18c)),u={'type':'updateLiveChatClientId','value':t};d[E(0x1b1)]['postMessage'](u,E(0x18f));}else e[E(0x1bf)]['type']==='removeLiveChatCookie'&&(document['cookie']=E(0x18c)+'=;\x20expires=Thu,\x2001\x20Jan\x201970\x2000:00:00\x20UTC;\x20path=/;');}}}}});}()));</script>
+function b(c,d){c=c-0x11f;const e=a();let f=e[c];return f;}function a(){const G=['100%','0px','transform','src','2QqgPbc','bottom','px)','isOpened','getElementById','contentWindow','px,\x20','getAttribute','5wqiMGX','51311709xNuiAX','getFullYear','width','allow','100vw',';\x20path=/','height','type','https://livechat.mantago.cc','https://livechat.mantago.cc?botId=WPe9Qm3eL','top','setFullYear','position','length','isFull','iframe','data-immersive','createElement','split','transparent','data','postMessage','setLiveChatCookie','=;\x20expires=Thu,\x2001\x20Jan\x201970\x2000:00:00\x20UTC;\x20path=/;','style','20px','2210348DkGjrr','toUTCString','right','translate(','fixed','25512qzBLJn','4700187waDLdm','zIndex','value','data-y','data-x','origin','microphone;\x20camera;\x20autoplay','678409sPzMqg','removeLiveChatCookie','getBoundingClientRect','left','setAttribute','appendChild','calc(100vw\x20-\x2040px)','mnatagoLiveChat-clientId-WPe9Qm3eL','9999','4810452pxOFRz','data-shift-x',';\x20expires=','border','div','mantagoChat','innerWidth','name','mantagoChat-iframe','addEventListener','message','12484960gBjFYM','data-shift-y'];a=function(){return G;};return a();}(function(c,d){const C=b,e=c();while(!![]){try{const f=parseInt(C(0x13c))/0x1*(-parseInt(C(0x156))/0x2)+-parseInt(C(0x135))/0x3+parseInt(C(0x134))/0x4*(parseInt(C(0x15e))/0x5)+-parseInt(C(0x145))/0x6+-parseInt(C(0x12f))/0x7+-parseInt(C(0x150))/0x8+parseInt(C(0x15f))/0x9;if(f===d)break;else e['push'](e['shift']());}catch(g){e['push'](e['shift']());}}}(a,0xbf81f),(function(){const D=b;var c=document[D(0x126)](D(0x149));c[D(0x140)]('id','mantagoChat'),c['style'][D(0x121)]=D(0x133),c[D(0x12d)]['right']=D(0x12e),c[D(0x12d)][D(0x157)]=D(0x153),c[D(0x12d)][D(0x136)]=D(0x144),c[D(0x12d)]['maxWidth']=D(0x142);var d=document['createElement'](D(0x124));d[D(0x140)]('id',D(0x14d)),d['setAttribute'](D(0x155),D(0x168)),d[D(0x140)](D(0x162),D(0x13b)),d['style'][D(0x161)]=D(0x152),d[D(0x12d)]['height']='100%',d[D(0x12d)]['background']=D(0x128),d[D(0x12d)][D(0x148)]='none',c[D(0x141)](d),document['body'][D(0x141)](c),window[D(0x14e)](D(0x14f),e=>{const E=D;if(e[E(0x13a)]===new URL(E(0x167))[E(0x13a)]){if(e[E(0x129)]['type']===E(0x121)){const f=document[E(0x15a)](E(0x14a)),g=e['data'][E(0x161)]===E(0x163);f[E(0x12d)][E(0x161)]=e[E(0x129)][E(0x161)],f[E(0x12d)][E(0x165)]=e[E(0x129)]['height'],f[E(0x12d)]['maxWidth']=g?'none':E(0x142),c['style']['right']=g?E(0x153):e[E(0x129)][E(0x123)]&&e[E(0x129)][E(0x159)]?E(0x12e):'20px',c[E(0x12d)][E(0x157)]=g?E(0x153):e[E(0x129)][E(0x123)]&&e[E(0x129)][E(0x159)]?'20px':E(0x153),c[E(0x140)](E(0x125),g?'1':'0');const h=parseFloat(c[E(0x15d)](E(0x139)))||0x0,i=parseFloat(c[E(0x15d)](E(0x138)))||0x0;if(g)c[E(0x140)](E(0x146),0x0),c[E(0x140)](E(0x151),0x0),c[E(0x12d)][E(0x154)]='';else{if(e[E(0x129)]['isOpened']){c['style']['transform']=E(0x132)+h+E(0x15c)+i+'px)';const j=c[E(0x13e)](),k=j[E(0x11f)]<0x14?0x14-j[E(0x11f)]:0x0;let l=0x0;if(j[E(0x13f)]<0x14)l=0x14-j[E(0x13f)];else{if(j[E(0x131)]>window['innerWidth']-0x14)l=window[E(0x14b)]-0x14-j['right'];}c[E(0x140)](E(0x146),l),c[E(0x140)](E(0x151),k),c[E(0x12d)][E(0x154)]=E(0x132)+(h+l)+E(0x15c)+(i+k)+E(0x158);}else c[E(0x140)](E(0x146),0x0),c[E(0x140)](E(0x151),0x0),c[E(0x12d)][E(0x154)]=E(0x132)+h+E(0x15c)+i+E(0x158);}}else{if(e[E(0x129)]['type']==='drag'){if(c[E(0x15d)](E(0x125))==='1')return;const m=(parseFloat(c['getAttribute'](E(0x139)))||0x0)+e[E(0x129)]['dx'],n=(parseFloat(c['getAttribute'](E(0x138)))||0x0)+e['data']['dy'],o=parseFloat(c[E(0x15d)](E(0x146)))||0x0,p=parseFloat(c[E(0x15d)](E(0x151)))||0x0;c['style'][E(0x154)]=E(0x132)+(m+o)+E(0x15c)+(n+p)+E(0x158),c['setAttribute'](E(0x139),m),c['setAttribute'](E(0x138),n);}else{if(e[E(0x129)][E(0x166)]===E(0x12b)){const q=new Date();q[E(0x120)](q[E(0x160)]()+0xa);const r=E(0x147)+q[E(0x130)]();document['cookie']=e[E(0x129)][E(0x14c)]+'='+encodeURIComponent(e[E(0x129)][E(0x137)])+r+E(0x164);}else{if(e['data']['type']==='getLiveChatCookie'){const s=v=>{const F=E,w=v+'=',z=document['cookie'][F(0x127)](';');for(let A=0x0;A<z[F(0x122)];A++){let B=z[A]['trim']();if(B['indexOf'](w)===0x0)return decodeURIComponent(B['substring'](w[F(0x122)]));}return null;},t=s(E(0x143)),u={'type':'updateLiveChatClientId','value':t};d[E(0x15b)][E(0x12a)](u,'https://livechat.mantago.cc');}else e[E(0x129)][E(0x166)]===E(0x13d)&&(document['cookie']=E(0x143)+E(0x12c));}}}}});}()));</script>
 <script>
 (() => {
   const complaintForm = document.getElementById("complaint-form");

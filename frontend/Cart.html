@@ -91,17 +91,17 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
 <body>
 <header>
   <div class="wrap top">
-    <a href="Home.html" class="brand-link" aria-label="Pet Guardian home">
+    <a href="home.html" class="brand-link" aria-label="Pet Guardian home">
       <img class="brand-logo" src="Brand_image/website_logo.jpeg" alt="Pet Guardian">
     </a>
     <nav aria-label="Cart navigation">
-      <a href="Home.html">Continue shopping</a>
-      <a href="Cart.html#tracking">Track orders</a>
+      <a href="home.html">Continue shopping</a>
+      <a href="cart.html#tracking">Track orders</a>
     </nav>
     <div class="header-actions">
-      <a class="cart" href="Cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
-      <a class="history" href="OrderHistory.html" aria-label="Past order history" title="Past order history">🧾</a>
-      <a class="avatar" href="Profile.html" aria-label="Profile">👤</a>
+      <a class="cart" href="cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
+      <a class="history" href="orderhistory.html" aria-label="Past order history" title="Past order history">🧾</a>
+      <a class="avatar" href="profile.html" aria-label="Profile">👤</a>
     </div>
   </div>
 </header>
@@ -112,7 +112,7 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
     <p class="intro">Review your items and choose delivery or store collection.</p>
     <p class="notice" id="products-loading" role="status">Loading products...</p>
     <p class="notice" id="products-error" role="alert" hidden>Products could not be loaded. Please try again later.</p>
-    <p class="notice" id="empty-cart" hidden>Your cart is empty. <a href="Home.html">Browse products</a> to add something for your pet.</p>
+    <p class="notice" id="empty-cart" hidden>Your cart is empty. <a href="home.html">Browse products</a> to add something for your pet.</p>
     <section class="panel" aria-label="Cart items">
       <div id="cart-items"></div>
       <div class="summary" id="cart-summary" hidden>
@@ -164,8 +164,8 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
       <p id="confirmation-message" class="intro"></p>
       <p class="notice">This order is a demo. It has not been sent to a store and no payment or delivery has been processed.</p>
       <div class="actions">
-        <a class="cta" href="Cart.html#tracking">Track your order</a>
-        <a class="cta secondary" href="Home.html">Continue shopping</a>
+        <a class="cta" href="cart.html#tracking">Track your order</a>
+        <a class="cta secondary" href="home.html">Continue shopping</a>
       </div>
     </div>
   </section>
@@ -483,9 +483,9 @@ function routePage() {
 }
 
 window.addEventListener("hashchange", routePage);
-document.querySelectorAll('a[href="Cart.html#tracking"]').forEach(link => {
+document.querySelectorAll('a[href="cart.html#tracking"]').forEach(link => {
   link.addEventListener("click", () => {
-    if (location.pathname.endsWith("Cart.html") && location.hash === "#tracking") {
+    if (location.pathname.endsWith("cart.html") && location.hash === "#tracking") {
       renderOrders();
     }
   });

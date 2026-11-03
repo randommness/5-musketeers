@@ -221,7 +221,7 @@
         </div>
 
         <button class="btn" type="submit">Log in</button>
-        <p class="guest-link"><a href="Home.html?guest=1">Browse as guest</a></p>
+        <p class="guest-link"><a href="home.html?guest=1">Browse as guest</a></p>
       </form>
 
       <nav class="legal" aria-label="Legal">
@@ -540,7 +540,7 @@
       } else {
         store.del(REMEMBERED_ID_KEY);
       }
-      window.location.href = 'Home.html';
+      window.location.href = 'home.html';
     } catch (err) {
       setDisabled(false);
       showAlert('Sign in could not be completed. ' + describeLoginError(err), true);
