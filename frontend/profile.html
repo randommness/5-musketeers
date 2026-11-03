@@ -79,15 +79,15 @@ footer { padding: 24px; background: var(--pink); text-align: center; font-size: 
 <body>
 <header>
   <div class="top">
-    <a href="Home.html" aria-label="Pet Guardian home"><img class="brand-logo" src="Brand_image/website_logo.jpeg" alt="Pet Guardian"></a>
+    <a href="home.html" aria-label="Pet Guardian home"><img class="brand-logo" src="Brand_image/website_logo.jpeg" alt="Pet Guardian"></a>
     <nav aria-label="Profile navigation">
-      <a href="Home.html">Continue shopping</a>
-      <a href="Cart.html#tracking">Track orders</a>
+      <a href="home.html">Continue shopping</a>
+      <a href="cart.html#tracking">Track orders</a>
     </nav>
     <div class="header-actions">
-      <a class="cart" href="Cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
-      <a class="history" href="OrderHistory.html" aria-label="Past order history" title="Past order history">🧾</a>
-      <a class="avatar" href="Profile.html" aria-label="Profile">👤</a>
+      <a class="cart" href="cart.html" aria-label="Cart">🛒<span class="cart-count">0</span></a>
+      <a class="history" href="orderhistory.html" aria-label="Past order history" title="Past order history">🧾</a>
+      <a class="avatar" href="profile.html" aria-label="Profile">👤</a>
     </div>
   </div>
 </header>
@@ -340,13 +340,13 @@ document.getElementById("password-form").addEventListener("submit", event => {
     return;
   }
   passwordForm.reset();
-  setStatus(status, "Demo password reset accepted. No password was stored or changed on a real account.", false);
+  setStatus(status, "Password reset submitted. This is a prototype — no account password was changed.", false);
 });
 
 document.getElementById("sign-out").addEventListener("click", () => {
   localStorage.removeItem(AUTH_KEY);
   localStorage.removeItem(CUSTOMER_ID_KEY);
-  window.location.href = "Login.html";
+  window.location.href = "login.html";
 });
 </script>
 </body>
