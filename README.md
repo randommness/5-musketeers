@@ -1,3 +1,7 @@
+### IMPORTANT: The team's aware of our website being flagged as potentially dangerous on Google Chrome. We've raised a safety review request with them and have done our due diligence to re-verify our code for safety. 
+
+### Please kindly open our website (https://ym-fanclub-pet-guardian.vercel.app/) on another browser.
+
 # 5-musketeers
 For AI-GNITION 2026 Hackathon
 

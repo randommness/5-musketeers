@@ -86,7 +86,6 @@ def pair_product_recommendation(db: Session):
         JOIN product_info AS pb
             ON pb.product_id = r.product_b_id
         WHERE r.recommendation_rank <= 3
-            AND r.product_a_id IN ('PRD003', 'PRD004', 'PRD023', 'PRD041', 'PRD078')
         ORDER BY
             r.product_a_id,
             r.recommendation_rank;
@@ -178,7 +177,6 @@ def pair_product_recommendation(db: Session):
             ON pb.product_id = r.product_b_id
 
         WHERE r.recommendation_rank <= 2
-            AND r.product_a_id IN ('PRD001', 'PRD002', 'PRD003', 'PRD004', 'PRD005')
 
         ORDER BY
             r.product_a_id,
@@ -262,7 +260,6 @@ def pair_product_recommendation(db: Session):
             f"Order pattern signal (co-purchased by other customers): {json.dumps(o_rows)}. "
             f"Product similarity signal (same brand, pet type, similar price): {json.dumps(p_rows)}."
         )
-        print(user_prompt)
 
         raw_response = chat(user_prompt=user_prompt, system_prompt=system_prompt)
 

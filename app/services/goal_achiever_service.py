@@ -76,7 +76,6 @@ def goal_product_recommendation(db: Session):
                 p.product_id
             LIMIT 2
         ) r ON TRUE
-        WHERE g.customer_id IN ('CUST001', 'CUST002', 'CUST003', 'CUST004', 'CUST005')
         ORDER BY
             g.customer_id,
             CASE r.match_reason
