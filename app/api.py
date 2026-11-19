@@ -6,16 +6,21 @@ from app.routers import health, first_check_in, goal_achiever, products, product
 from app.routers import api_catalog, api_login, api_customer_dashboard, api_retail, api_new_order, api_new_review, api_update_order
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Customer data & insights API")
+    app = FastAPI(
+        title="Customer data & insights API",
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None,
+    )
 
-    # Read allowed origins from env — comma-separated list of frontend URLs.
-    # Default to local if none set
+    # Read allowed origins from env (comma-separated list of frontend URLs).
+    # Default to local if none set.
     raw = os.getenv("ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500")
     allowed_origins = [origin.strip() for origin in raw.split(",")]
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"], #allowed_origins,
+        allow_origins=allowed_origins,
         allow_methods=["GET", "POST", "PATCH"],
         allow_headers=["*"],
     )
@@ -33,5 +38,5 @@ def create_app() -> FastAPI:
     app.include_router(api_new_order.router)
     app.include_router(api_new_review.router)
     app.include_router(api_update_order.router)
-    
+
     return app
