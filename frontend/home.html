@@ -687,25 +687,14 @@ footer {
 </style>
 <script>
 (() => {
-  const authKey = "petGuardianSignedIn";
-  const guestKey = "petGuardianGuestSession";
-  const guestRequested = new URLSearchParams(window.location.search).get("guest") === "1";
-
   try {
-    if (guestRequested) {
-      sessionStorage.setItem(guestKey, "true");
-      history.replaceState(null, "", `${location.pathname}${location.hash}`);
-    }
-
-    const signedIn = localStorage.getItem(authKey) === "true";
-    const guestSession = sessionStorage.getItem(guestKey) === "true";
-    if (!signedIn && !guestSession) {
+    if (localStorage.getItem("petGuardianSignedIn") !== "true") {
       window.location.replace("login.html");
     }
-  } catch (error) {
-    console.error("Could not verify the current website session:", error);
+  } catch (e) {
     window.location.replace("login.html");
   }
+})();
 })();
 </script>
 </head>
